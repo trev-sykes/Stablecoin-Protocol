@@ -1,4 +1,4 @@
-import { WalletCards, Lock, ArrowRight } from 'lucide-react';
+import { WalletCards, Lock } from 'lucide-react';
 import styles from './SignInNotice.module.css';
 
 const SignInNotice: React.FC = () => {
