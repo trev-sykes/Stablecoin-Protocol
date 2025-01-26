@@ -1,0 +1,138 @@
+.container {
+    width: 200px;
+    /* Fixed width for the navigation */
+    height: 100vh;
+    /* Full height */
+    background-color: #f4f4f4;
+    /* Subtle background for the navigation */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* Space out the menu and sign-in button */
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 1px solid #ddd;
+    /* Optional: border to separate the navigation from the dashboard */
+}
+
+.titleContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.titleItem {
+    margin: 7.5px 0;
+}
+
+.connectContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.menuItem {
+    text-align: left;
+    padding: 10px 20px;
+    margin: 15px 0;
+    width: 100%;
+    min-height: 70px;
+    /* Make the menu item fill the width */
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    /* Dark text for good readability */
+    background-color: transparent;
+    /* Make background transparent */
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth transitions for hover effects */
+}
+
+.connected:hover {
+    background-color: #007bff;
+    /* Highlight color on hover */
+    color: #fff;
+    /* White text on hover */
+}
+
+.noConnection {
+    cursor: not-allowed;
+}
+
+.menuItem.active {
+    background-color: #cae3ff;
+}
+
+.signInButton {
+    padding: 5px 15px;
+    background-color: #007bff;
+    /* Blue background for the sign-in button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.signInButton:hover {
+    background-color: #0056b3;
+    /* Darker blue when hovered */
+}
+
+.signInContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+}
+
+.signInAddress a {
+    font-size: 1.15rem;
+    text-decoration: none;
+    font-weight: 400;
+    color: black;
+}
+
+
+
+.signInAddress a:hover {
+    color: rgb(53, 53, 53);
+}
+
+.signInAddress a::after {
+    background: '';
+}
+
+.imgContainer {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-right: 5px;
+
+}
+
+.img {
+    width: 100%;
+    border-radius: 50%;
+}

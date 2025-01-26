@@ -1,0 +1,2 @@
+const bitcoinDollarEngineAddress = '0xfcb2a8bd0d3af2e116329ff006f9d30812f02785';
+export default bitcoinDollarEngineAddress;

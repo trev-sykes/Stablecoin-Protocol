@@ -1,0 +1,19 @@
+.notice {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 1rem;
+}
+
+.noticeContent {
+    text-align: center;
+}
+
+.noticeContent h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.noticeContent p {
+    color: #666;
+}

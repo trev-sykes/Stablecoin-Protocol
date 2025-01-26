@@ -1,0 +1,2 @@
+const syntheticBitcoinAddress = '0x07C8e833b6e3128c1890fe0Bd542691DBd91aD08';
+export default syntheticBitcoinAddress;
