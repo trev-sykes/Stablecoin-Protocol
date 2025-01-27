@@ -105,9 +105,14 @@ export const DataCard: React.FC<DataCardProps> = ({
                                             <p>{data > 100 ? 'Healthy' : data > 50 ? 'Okay' : data > 25 ? 'Needs Work' : 'Bad'}</p>
                                         </>
                                     )}
-                                    {title != 'Position Health' && (
+                                    {title != 'Position Health' && title != 'Debt' && (
                                         <>
                                             {currencySymbol}{data?.toLocaleString()} {currencyCode}
+                                        </>
+                                    )}
+                                    {title == 'Debt' && (
+                                        <>
+                                            ${parseFloat(data?.toLocaleString().split('.')[0]).toLocaleString()} {currencyCode}
                                         </>
                                     )}
 
@@ -127,6 +132,6 @@ export const DataCard: React.FC<DataCardProps> = ({
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };

@@ -1,2 +1,2 @@
-const bitcoinDollarAddress = '0xfcB2A8BD0d3Af2e116329fF006F9D30812F02785';
+const bitcoinDollarAddress = '0xC0e6Eb7866a4D2BBC6bd56365349f35de9ACd9b0';
 export default bitcoinDollarAddress;

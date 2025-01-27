@@ -26,7 +26,7 @@ function App() {
   const { userDeposits, userDepositValue, userMintedDollars, userHealthFactor, userDebtSharePercentage, isSignInLoadingState, refreshOrConnectUserData, userMaxMintableAmount, chainId, signer } = useSignIn();
   const { bitcoinPrice, sBtcDeposits, liquidity, debt, protocolHealthFactor, isLoadingProtocolState, refreshProtocolState } = useProtocolRead();
   const { formInputs, handleInputChange } = useForm({ deposit: '', mint: '' });
-  const { handleDeposit, handleWithdraw, handleMinting } = useProtocolWrite();
+  const { handleDeposit, handleWithdraw, handleMinting, handleBurning } = useProtocolWrite();
   const { handleTransaction } = useTransaction();
   const { alertStatus, showAlert } = useAlert();
   const [active, setActive] = useState('home');
@@ -58,7 +58,14 @@ function App() {
     await handleTransaction(handleMinting, amount, 'mint', showAlert, refreshProtocolState, refreshOrConnectUserData);
   };
 
-  const burn = async () => { }
+  const burn = async () => {
+    const amount = formInputs.burn;
+    if (!amount || parseFloat(amount) < 1) {
+      showAlert('error', 'Please enter a valid amount (minimum 1 sBTC)');
+      return;
+    }
+    await handleTransaction(handleBurning, amount, 'burn', showAlert, refreshProtocolState, refreshOrConnectUserData);
+  }
 
   return (
     <>

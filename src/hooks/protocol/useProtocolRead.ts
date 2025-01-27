@@ -45,9 +45,8 @@ export function useProtocolRead() {
                 contractInstance.getCurrentState(),
                 contractInstance.getSystemContractAddresses()
             ]);
-
+            console.log(protocolAddressesResponse);
             const liquidityResponse = await contractInstance.getUsdValue(protocolInfoResponse[1]);
-
             setProtocolState({
                 bitcoinPrice: protocolInfoResponse[0],
                 sBtcDeposits: protocolInfoResponse[1],

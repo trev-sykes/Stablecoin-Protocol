@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Navigation.module.css";
 import img from "../../assets/satoshi.png";
+import BitcoinDollarSymbol from "../bitcoinDollarSymbol/BitcoinDollarSymbol";
 
 interface NavigationProps {
     refreshOrConnectUserData: any;
@@ -62,7 +63,10 @@ const Navigation: React.FC<NavigationProps> = ({
     return (
         <div className={styles.container}>
             <div className={styles.titleContainer}>
-                <h2 className={styles.titleItem}>Bitcoin Lending</h2>
+                <div className={styles.titleSymbolContainer}>
+                    <h2 className={styles.titleItem}>BitcoinDollar</h2>
+                    <span><BitcoinDollarSymbol width={30} /></span>
+                </div>
                 <h3 className={styles.titleItem}>{active}</h3>
             </div>
             <div className={styles.menu}>
