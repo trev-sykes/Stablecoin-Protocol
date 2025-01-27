@@ -84,16 +84,13 @@ export function useProtocolWrite() {
             return;
         }
         try {
+
             const provider = new ethers.BrowserProvider(window.ethereum);
-            const accounts = await provider.send("eth_requrestAccounts", []);
-            if (accounts.length < 1) {
-                console.log("Accounts Request unsuccessful.");
-                return;
-            }
+            const accounts = await provider.send('eth_requestAccounts', []);
             const signer = await provider.getSigner(accounts[0]);
             const contractInstance = new ethers.Contract(bitcoinDollarEngineAddress, bitcoinDollarEngineABI, signer);
             const txAmount = ethers.parseUnits(amount, 'ether');
-            return await contractInstance.withdraw(txAmount);
+            return await contractInstance.redeemCollateral(txAmount);
 
         } catch (err: any) {
             console.error('Error processing your withdraw', err.message);

@@ -10,7 +10,6 @@ export function useProtocolRead() {
     if (!rpcUrl) {
         throw new Error('RPC URL not configured. Please check your environment variables.');
     }
-    console.log('rpc url', rpcUrl);
 
     const [protocolState, setProtocolState] = useState({
         bitcoinPrice: null,
@@ -45,7 +44,6 @@ export function useProtocolRead() {
                 contractInstance.getCurrentState(),
                 contractInstance.getSystemContractAddresses()
             ]);
-            console.log(protocolAddressesResponse);
             const liquidityResponse = await contractInstance.getUsdValue(protocolInfoResponse[1]);
             setProtocolState({
                 bitcoinPrice: protocolInfoResponse[0],

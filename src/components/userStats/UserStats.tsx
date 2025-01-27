@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { displays } from "../../utils/Format/Format";
 import { math } from "../../utils/Math/Math";
 import { DataCard } from "../dataCard/DataCard";
@@ -54,7 +53,7 @@ export const UserStats: React.FC<UserStatsProps> = ({
                 <div className={styles.secondaryStats}>
                     <DataCard
                         title="Minted BTCd"
-                        data={ethers.formatUnits(userMintedDollars || 0)}
+                        data={displays.toFormattedData('Debt', userMintedDollars)}
                         currencyCode="BTCd"
                     />
                     <DataCard
