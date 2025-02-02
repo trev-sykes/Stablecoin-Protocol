@@ -38,23 +38,25 @@ export const DepositForm: React.FC<DepositFormProps> = ({ deposit, withdraw, for
                 </div>
                 {activeSection == 'deposit' && (
                     <div className={`${styles.depositSection} ${activeSection == 'deposit' ? styles.active : ''}`}>
-                        <h3 className={styles.subTitle}>Deposit </h3>
-                        <div className={styles.inputGroup}>
-                            <label htmlFor="depoistAmount">Amount to deposit</label>
-                            <input
-                                id='depositAmount'
-                                type="number"
-                                value={formInputs.deposit}
-                                onChange={handleInputChange('deposit')}
-                                min={1}
-                                max={3}
-                                placeholder="Enter a Deposit Amount"
-                                className={styles.input}
-                            />
-                        </div>
-                        <div className={styles.costContainer}>
-                            <p className={styles.cost}>Min Deposit:{1}</p>
-                            <p className={styles.cost}>Max deposit:{3}</p>
+                        <div>
+                            <h3 className={styles.subTitle}>Deposit </h3>
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="depoistAmount">Amount to deposit</label>
+                                <input
+                                    id='depositAmount'
+                                    type="number"
+                                    value={formInputs.deposit}
+                                    onChange={handleInputChange('deposit')}
+                                    min={1}
+                                    max={3}
+                                    placeholder="Enter a Deposit Amount"
+                                    className={styles.input}
+                                />
+                            </div>
+                            <div className={styles.costContainer}>
+                                <p className={styles.cost}>Min Deposit:{1}</p>
+                                <p className={styles.cost}>Max deposit:{3}</p>
+                            </div>
                         </div>
                         <button
                             type="button"
@@ -68,21 +70,23 @@ export const DepositForm: React.FC<DepositFormProps> = ({ deposit, withdraw, for
                 )}
                 {activeSection == 'withdraw' && (
                     <div className={`${styles.withdrawSection} ${activeSection == 'withdraw' ? styles.active : ''}`}>
-                        <h3 className={styles.subTitle}>Withdraw To Your Wallet</h3>
-                        <div className={styles.inputGroup}>
-                            <label htmlFor="withdraw">Amount To Withdraw</label>
-                            <input
-                                type="number"
-                                id="withdraw"
-                                min={1}
-                                max={userDeposits}
-                                value={formInputs.withdraw}
-                                onChange={handleInputChange('withdraw')}
-                                placeholder="Enter an amount to withdraw"
-                                className={styles.input}
-                            />
+                        <div>
+                            <h3 className={styles.subTitle}>Withdraw </h3>
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="withdraw">Amount To Withdraw</label>
+                                <input
+                                    type="number"
+                                    id="withdraw"
+                                    min={1}
+                                    max={userDeposits}
+                                    value={formInputs.withdraw}
+                                    onChange={handleInputChange('withdraw')}
+                                    placeholder="Enter an amount to withdraw"
+                                    className={styles.input}
+                                />
+                            </div>
+                            <p className={styles.cost}>Balance: {userDeposits ? (userDeposits / 1000000000000000000n).toString() : 'log-in'} sBTC</p>
                         </div>
-                        <p className={styles.cost}>Balance: {userDeposits ? (userDeposits / 1000000000000000000n).toString() : 'log-in'} sBTC</p>
                         <button
                             type="button"
                             onClick={() => withdraw()}
@@ -93,6 +97,6 @@ export const DepositForm: React.FC<DepositFormProps> = ({ deposit, withdraw, for
                 )}
             </div>
             <TestnetNotice />
-        </div>
+        </div >
     )
 }

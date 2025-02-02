@@ -51,7 +51,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .container {
         padding: 16px;
     }
@@ -64,5 +64,11 @@
 
     .gridItem {
         min-width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .gridItem:first-child {
+        display: none;
     }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Navigation from "./components/navigation/Navigation";
 import './App.css';
 import { useSignIn } from './hooks/web3/useSignIn';
@@ -23,14 +23,14 @@ function App() {
   const windowWidth = useWindowWidth();
 
   useRenderMouseStalker();
-  const { userDeposits, userDepositValue, userMintedDollars, userHealthFactor, userDebtSharePercentage, isSignInLoadingState, refreshOrConnectUserData, userMaxMintableAmount, chainId, signer } = useSignIn();
-  const { bitcoinPrice, sBtcDeposits, liquidity, debt, protocolHealthFactor, isLoadingProtocolState, refreshProtocolState } = useProtocolRead();
+  const { isSignInLoadingState, refreshOrConnectUserData, chainId, ...userState } = useSignIn();
+  const { refreshProtocolState, isLoadingProtocolState, ...protocolState } = useProtocolRead();
   const { formInputs, handleInputChange } = useForm({ deposit: '', mint: '' });
   const { handleDeposit, handleWithdraw, handleMinting, handleBurning } = useProtocolWrite();
   const { handleTransaction } = useTransaction();
   const { alertStatus, showAlert } = useAlert();
   const [active, setActive] = useState('home');
-
+  // Must keep the functions in app to update state properly. Or use useContext 
   const deposit = async () => {
     const amount = formInputs.deposit;
     if (!amount || parseFloat(amount) < 1) {
@@ -40,36 +40,36 @@ function App() {
     await handleTransaction(handleDeposit, amount, 'deposit', showAlert, refreshProtocolState, refreshOrConnectUserData);
   };
 
-  const withdraw = async () => {
+  const withdraw = useCallback(async () => {
     const amount = formInputs.withdraw;
     if (!amount || parseFloat(amount) < 1) {
       showAlert('error', 'Please enter a valid amount (minimum 1 sBTC');
       return;
     }
     await handleTransaction(handleWithdraw, amount, 'withdraw', showAlert, refreshProtocolState, refreshOrConnectUserData);
-  }
+  }, []);
 
-  const mint = async () => {
+  const mint = useCallback(async () => {
     const amount = formInputs.mint;
     if (!amount || parseFloat(amount) < 1) {
       showAlert('error', 'Please enter a valid amount (minimum 1 sBTC)');
       return;
     }
     await handleTransaction(handleMinting, amount, 'mint', showAlert, refreshProtocolState, refreshOrConnectUserData);
-  };
+  }, []);
 
-  const burn = async () => {
+  const burn = useCallback(async () => {
     const amount = formInputs.burn;
     if (!amount || parseFloat(amount) < 1) {
       showAlert('error', 'Please enter a valid amount (minimum 1 sBTC)');
       return;
     }
     await handleTransaction(handleBurning, amount, 'burn', showAlert, refreshProtocolState, refreshOrConnectUserData);
-  }
+  }, []);
 
   return (
     <>
-      {windowWidth > 1000 ? (
+      {windowWidth > 200 ? (
         <div className="container">
           {alertStatus.isVisible && (
             <CustomAlert
@@ -81,7 +81,7 @@ function App() {
           <div className="navigation">
             <Navigation
               refreshOrConnectUserData={refreshOrConnectUserData}
-              signer={signer}
+              signer={userState.signer}
               active={active}
               setActive={setActive}
               chainId={chainId}
@@ -93,7 +93,7 @@ function App() {
             {active === 'portfolio' && (
               !isSignInLoadingState ? (
                 <UserStats
-                  {...{ userDeposits, userDepositValue, userMintedDollars, userDebtSharePercentage, userHealthFactor, signer }}
+                  {...userState}
                 />
               ) : (
                 <div className="signInContainer">
@@ -107,11 +107,11 @@ function App() {
               !isLoadingProtocolState && (
                 <div className="protocolGridContainer">
                   <ProtocolStats
-                    bitcoinPrice={bitcoinPrice}
-                    sBtcDeposits={sBtcDeposits}
-                    liquidity={liquidity}
-                    debt={debt}
-                    protocolHealthFactor={protocolHealthFactor}
+                    bitcoinPrice={protocolState.bitcoinPrice}
+                    sBtcDeposits={protocolState.sBtcDeposits}
+                    liquidity={protocolState.liquidity}
+                    debt={protocolState.debt}
+                    protocolHealthFactor={protocolState.protocolHealthFactor}
                     isLoadingProtocolState={isLoadingProtocolState}
                   />
                 </div>
@@ -124,19 +124,19 @@ function App() {
                 withdraw={withdraw}
                 formInputs={formInputs}
                 handleInputChange={handleInputChange}
-                userDeposits={userDeposits}
+                userDeposits={userState.userDeposits}
               />
             )}
 
             {active === 'borrowing' && (
               <MintForm
-                bitcoinPrice={bitcoinPrice}
+                bitcoinPrice={protocolState.bitcoinPrice}
                 mint={mint}
                 burn={burn}
                 formInputs={formInputs}
                 handleInputChange={handleInputChange}
-                balance={userMintedDollars}
-                maxMintableAmount={userMaxMintableAmount}
+                balance={userState.userMintedDollars}
+                maxMintableAmount={userState.userMaxMintableAmount}
               />
             )}
           </div>

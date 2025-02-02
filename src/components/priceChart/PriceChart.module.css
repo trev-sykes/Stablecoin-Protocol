@@ -1,3 +1,9 @@
 .container {
     max-height: 301px;
 }
+
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+    }
+}
