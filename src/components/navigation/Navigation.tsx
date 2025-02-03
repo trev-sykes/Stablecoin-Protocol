@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { House, Bitcoin, User, Plus, Flame } from "lucide-react";
+import { House, Bitcoin, User, Plus, Flame, LogIn } from "lucide-react";
 import { useAlert } from '../../hooks/useAlert';;
 import { CustomAlert } from '../../utils/customAlert/CustomAlert';
 import styles from "./Navigation.module.css";
@@ -60,6 +60,8 @@ const Navigation: React.FC<NavigationProps> = ({
 
 
     const updateActive = (newState: string) => {
+        if (!connectionStatus.hasWalletConnection && newState != 'protocol' && newState != 'home')
+            return;
         if (newState !== active) {
             setActive(newState);
         }
@@ -160,7 +162,6 @@ const Navigation: React.FC<NavigationProps> = ({
                                 } ${active === "portfolio" ? styles.active : ""}`}
                         />
                         <Bitcoin
-                            aria-disabled={!connectionStatus.hasInternetConnection}
                             onClick={() => updateActive("protocol")}
                             className={`${styles.menuItem} ${!connectionStatus.hasInternetConnection
                                 ? styles.noConnection
@@ -168,7 +169,6 @@ const Navigation: React.FC<NavigationProps> = ({
                                 } ${active === "protocol" ? styles.active : ""}`}
                         />
                         <Plus
-                            aira-disabled={!connectionStatus.hasWalletConnection}
                             onClick={() => updateActive("collateral")}
                             className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
                                 ? styles.noConnection
@@ -176,7 +176,6 @@ const Navigation: React.FC<NavigationProps> = ({
                                 } ${active === "collateral" ? styles.active : ""}`}
                         />
                         <Flame
-                            aria-disabled={!connectionStatus.hasWalletConnection}
                             onClick={() => updateActive("borrowing")}
                             className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
                                 ? styles.noConnection
@@ -231,12 +230,11 @@ const Navigation: React.FC<NavigationProps> = ({
                                 </div>
                             ) : (
                                 <div>
-                                    <button
-                                        className={styles.signInButton}
+                                    <LogIn
+                                        // className={styles.signInButton}
                                         onClick={handleClick}
-                                    >
-                                        Sign In
-                                    </button>
+                                    />
+
                                 </div>
                             )}
                         </>
