@@ -90,9 +90,11 @@ export const DepositForm: React.FC<DepositFormProps> = ({ deposit, withdraw, for
                         <button
                             type="button"
                             onClick={() => withdraw()}
-                            disabled={!formInputs.withdraw || parseFloat(formInputs) < 1 || parseFloat(formInputs.withdraw) < 1 || parseFloat(formInputs.withdraw) > (userDeposits / 1000000000000000000n)}
+                            // disabled={!formInputs.withdraw || parseFloat(formInputs) < 1 || parseFloat(formInputs.withdraw) < 1 || parseFloat(formInputs.withdraw) > (userDeposits / 1000000000000000000n)}
+                            disabled={true}
                             className={styles.button}
                         >Withdraw</button>
+                        <p>on testnet, you cannot withdraw synthetic bitcoin. No value is lost.</p>
                     </div>
                 )}
             </div>

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import Navigation from "./components/navigation/Navigation";
 import './App.css';
 import { useSignIn } from './hooks/web3/useSignIn';
@@ -40,32 +40,32 @@ function App() {
     await handleTransaction(handleDeposit, amount, 'deposit', showAlert, refreshProtocolState, refreshOrConnectUserData);
   };
 
-  const withdraw = useCallback(async () => {
+  const withdraw = async () => {
     const amount = formInputs.withdraw;
     if (!amount || parseFloat(amount) < 1) {
       showAlert('error', 'Please enter a valid amount (minimum 1 sBTC');
       return;
     }
     await handleTransaction(handleWithdraw, amount, 'withdraw', showAlert, refreshProtocolState, refreshOrConnectUserData);
-  }, []);
+  }; 333
 
-  const mint = useCallback(async () => {
+  const mint = async () => {
     const amount = formInputs.mint;
     if (!amount || parseFloat(amount) < 1) {
       showAlert('error', 'Please enter a valid amount (minimum 1 sBTC)');
       return;
     }
     await handleTransaction(handleMinting, amount, 'mint', showAlert, refreshProtocolState, refreshOrConnectUserData);
-  }, []);
+  };
 
-  const burn = useCallback(async () => {
+  const burn = async () => {
     const amount = formInputs.burn;
     if (!amount || parseFloat(amount) < 1) {
       showAlert('error', 'Please enter a valid amount (minimum 1 sBTC)');
       return;
     }
     await handleTransaction(handleBurning, amount, 'burn', showAlert, refreshProtocolState, refreshOrConnectUserData);
-  }, []);
+  };
 
   return (
     <>

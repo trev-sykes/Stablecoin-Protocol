@@ -18,7 +18,7 @@ const Navigation: React.FC<NavigationProps> = ({
     active,
     setActive
 }) => {
-    const [width, setWidth] = useState<any>(window.innerWidth);
+    const [width, setWidth] = useState<number>(window.innerWidth);
     const [connectionStatus, setConnectionStatus] = useState({
         hasInternetConnection: false,
         hasWalletConnection: false,
@@ -172,22 +172,63 @@ const Navigation: React.FC<NavigationProps> = ({
                     </div>
                 )}
             <div className={styles.connectContainer}>
-                {connectionStatus.hasWalletConnection ? (
-                    <div className={styles.imgContainer}>
-                        <img className={styles.img} src={img} alt="profile" />
-                    </div>
-                ) : (
-                    <div>
-                        <button
-                            className={styles.signInButton}
-                            onClick={handleClick}
-                        >
-                            Sign In
-                        </button>
-                    </div>
-                )}
+                {width > 600 ?
+                    (
+                        <>
+                            {connectionStatus.hasWalletConnection ? (
+                                < div className={styles.signInContainer}>
+                                    <div className={styles.imgContainer}>
+                                        <img className={styles.img} src={img} alt="profile" />
+                                    </div>
+                                    <h5 className={styles.signInAddress} >
+                                        <a
+                                            href={`https://sepolia.etherscan.io/address/${signer ? signer.address : null}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            0x...{signer.address ? signer.address.slice(signer.address.length - 5) : null}
+                                        </a>
+                                    </h5>
+
+                                </div>
+                            ) : (
+                                <div>
+                                    <button
+                                        className={styles.signInButton}
+                                        onClick={handleClick}
+                                    >
+                                        Sign In
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )
+                    :
+                    (
+                        <>
+                            {connectionStatus.hasWalletConnection ? (
+                                < div className={styles.signInContainer}>
+                                    <div className={styles.imgContainer}>
+                                        <a href={`https://sepolia.etherscan.io/address/${signer ? signer.address : null}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"><img className={styles.img} src={img} alt="profile" /></a>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <button
+                                        className={styles.signInButton}
+                                        onClick={handleClick}
+                                    >
+                                        Sign In
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )
+                }
             </div>
-        </div>
+        </div >
     );
 };
 
