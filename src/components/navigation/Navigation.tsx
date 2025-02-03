@@ -42,21 +42,21 @@ const Navigation: React.FC<NavigationProps> = ({
         return navigator.onLine;
     };
 
-    const handleClick = () => {
-        const response = refreshOrConnectUserData();
-        if (response.ok) {
-            if (!connectionStatus.hasWalletConnection) {
-                setConnectionStatus((prev) => ({
-                    ...prev,
-                    hasWalletConnection: true,
-                }));
-            }
-            console.log('Connection Status:', connectionStatus);  // Check state update
+    const handleClick = async () => {
+        const success = await refreshOrConnectUserData();
+
+        if (success) {
+            setConnectionStatus((prev) => ({
+                ...prev,
+                hasWalletConnection: true,
+            }));
+        } else {
+            showAlert("error", "No wallet found or sign-in was canceled. Try downloading MetaMask.");
         }
-        else
-            showAlert("error", "No wallet found. Try Downloading Metamask")
-        console.log("no wallet found");
+
+        console.log("Connection Status:", connectionStatus);  // Check state update
     };
+
 
 
     const updateActive = (newState: string) => {

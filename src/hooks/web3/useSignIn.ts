@@ -48,11 +48,14 @@ export function useSignIn() {
                 signer: signer
             });
             setIsSignInLoadingState(false);
+            return true;
         } catch (err) {
             console.log(err);
             setUserState({ ...userState });
             setIsSignInLoadingState(true);
+            return false;
         }
+
     }, []);
 
     return { ...userState, isSignInLoadingState, refreshOrConnectUserData, chainId }
