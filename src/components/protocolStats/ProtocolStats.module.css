@@ -67,7 +67,7 @@
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 528px) {
     .gridItem:first-child {
         display: none;
     }

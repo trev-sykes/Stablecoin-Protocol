@@ -1,5 +1,6 @@
 .container {
     width: 200px;
+    position: fixed;
     /* Fixed width for the navigation */
     height: 100vh;
     /* Full height */
