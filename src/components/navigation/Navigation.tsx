@@ -4,6 +4,7 @@ import { useAlert } from '../../hooks/useAlert';;
 import { CustomAlert } from '../../utils/customAlert/CustomAlert';
 import styles from "./Navigation.module.css";
 import img from "../../assets/satoshi.png";
+import bitcoinDollarEngineAddress from "../../contracts/bitcoinDollar/bitcoinDollarAddress";
 import BitcoinDollarSymbol from "../bitcoinDollarSymbol/BitcoinDollarSymbol";
 
 interface NavigationProps {
@@ -60,7 +61,7 @@ const Navigation: React.FC<NavigationProps> = ({
 
 
     const updateActive = (newState: string) => {
-        if (!connectionStatus.hasWalletConnection && newState != 'protocol' && newState != 'home')
+        if (!connectionStatus.hasWalletConnection && newState != 'protocol' && newState != 'home' || !connectionStatus.hasInternetConnection)
             return;
         if (newState !== active) {
             setActive(newState);
@@ -94,97 +95,99 @@ const Navigation: React.FC<NavigationProps> = ({
             <div className={styles.titleContainer}>
                 <div className={styles.titleSymbolContainer}>
                     <h2 className={styles.titleItem}>BitcoinDollar</h2>
-                    <BitcoinDollarSymbol width={40} />
+                    <a href={`${`https://sepolia.etherscan.io/token/${bitcoinDollarEngineAddress}`}`} target='_blank' ><BitcoinDollarSymbol width={40} /></a>
                 </div>
             </div>
-            {width > 600 ?
-                (<div className={styles.menu}>
-                    <button
-                        onClick={() => updateActive("home")}
-                        className={`${styles.menuItem} ${active === "home" ? styles.active : ""
-                            } ${styles.connected}`}
-                    >
-                        Home
-                    </button>
-                    <button
-                        disabled={!connectionStatus.hasWalletConnection}
-                        onClick={() => updateActive("portfolio")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "portfolio" ? styles.active : ""}`}
-                    >
-                        Portfolio Summary
-                    </button>
-                    <button
-                        disabled={!connectionStatus.hasInternetConnection}
-                        onClick={() => updateActive("protocol")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasInternetConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "protocol" ? styles.active : ""}`}
-                    >
-                        Protocol Summary
-                    </button>
-                    <button
-                        disabled={!connectionStatus.hasWalletConnection}
-                        onClick={() => updateActive("collateral")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "collateral" ? styles.active : ""}`}
-                    >
-                        Collateral Management
-                    </button>
-                    <button
-                        disabled={!connectionStatus.hasWalletConnection}
-                        onClick={() => updateActive("borrowing")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "borrowing" ? styles.active : ""}`}
-                    >
-                        Borrowing Management
-                    </button>
-                </div>)
-                : (
-                    <div className={styles.menu}>
-                        <House
-                            onClick={() => updateActive('home')}
-                            className={`${styles.menuItem} ${active == 'home' ? styles.active : ''} ${styles.connected}`}
-                        />
-                        <User
-                            aria-disabled={!connectionStatus.hasWalletConnection}
+            {
+                width > 600 ?
+                    (<div className={styles.menu}>
+                        <button
+                            onClick={() => updateActive("home")}
+                            className={`${styles.menuItem} ${active === "home" ? styles.active : ""
+                                } ${styles.connected}`}
+                        >
+                            Home
+                        </button>
+                        <button
+                            disabled={!connectionStatus.hasWalletConnection}
                             onClick={() => updateActive("portfolio")}
                             className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
                                 ? styles.noConnection
                                 : styles.connected
                                 } ${active === "portfolio" ? styles.active : ""}`}
-                        />
-                        <Bitcoin
+                        >
+                            Portfolio Summary
+                        </button>
+                        <button
+                            disabled={!connectionStatus.hasInternetConnection}
                             onClick={() => updateActive("protocol")}
                             className={`${styles.menuItem} ${!connectionStatus.hasInternetConnection
                                 ? styles.noConnection
                                 : styles.connected
                                 } ${active === "protocol" ? styles.active : ""}`}
-                        />
-                        <Plus
+                        >
+                            Protocol Summary
+                        </button>
+                        <button
+                            disabled={!connectionStatus.hasWalletConnection}
                             onClick={() => updateActive("collateral")}
                             className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
                                 ? styles.noConnection
                                 : styles.connected
                                 } ${active === "collateral" ? styles.active : ""}`}
-                        />
-                        <Flame
+                        >
+                            Collateral Management
+                        </button>
+                        <button
+                            disabled={!connectionStatus.hasWalletConnection}
                             onClick={() => updateActive("borrowing")}
                             className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
                                 ? styles.noConnection
                                 : styles.connected
                                 } ${active === "borrowing" ? styles.active : ""}`}
-                        />
+                        >
+                            Borrowing Management
+                        </button>
+                    </div>)
+                    : (
+                        <div className={styles.menu}>
+                            <House
+                                onClick={() => updateActive('home')}
+                                className={`${styles.menuItem} ${active == 'home' ? styles.active : ''} ${styles.connected}`}
+                            />
+                            <User
+                                aria-disabled={!connectionStatus.hasWalletConnection}
+                                onClick={() => updateActive("portfolio")}
+                                className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
+                                    ? styles.noConnection
+                                    : styles.connected
+                                    } ${active === "portfolio" ? styles.active : ""}`}
+                            />
+                            <Bitcoin
+                                onClick={() => updateActive("protocol")}
+                                className={`${styles.menuItem} ${!connectionStatus.hasInternetConnection
+                                    ? styles.noConnection
+                                    : styles.connected
+                                    } ${active === "protocol" ? styles.active : ""}`}
+                            />
+                            <Plus
+                                onClick={() => updateActive("collateral")}
+                                className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
+                                    ? styles.noConnection
+                                    : styles.connected
+                                    } ${active === "collateral" ? styles.active : ""}`}
+                            />
+                            <Flame
+                                onClick={() => updateActive("borrowing")}
+                                className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
+                                    ? styles.noConnection
+                                    : styles.connected
+                                    } ${active === "borrowing" ? styles.active : ""}`}
+                            />
 
-                    </div>
-                )}
+                        </div>
+                    )
+            }
             <div className={styles.connectContainer}>
                 {width > 600 ?
                     (
