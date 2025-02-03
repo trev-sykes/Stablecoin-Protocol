@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { House, Bitcoin, User, Plus, Flame } from "lucide-react";
+import { useAlert } from '../../hooks/useAlert';;
+import { CustomAlert } from '../../utils/customAlert/CustomAlert';
 import styles from "./Navigation.module.css";
 import img from "../../assets/satoshi.png";
 import BitcoinDollarSymbol from "../bitcoinDollarSymbol/BitcoinDollarSymbol";
@@ -19,6 +21,7 @@ const Navigation: React.FC<NavigationProps> = ({
     setActive
 }) => {
     const [width, setWidth] = useState<number>(window.innerWidth);
+    const { alertStatus, showAlert } = useAlert();
     const [connectionStatus, setConnectionStatus] = useState({
         hasInternetConnection: false,
         hasWalletConnection: false,
@@ -40,14 +43,19 @@ const Navigation: React.FC<NavigationProps> = ({
     };
 
     const handleClick = () => {
-        refreshOrConnectUserData();
-        if (!connectionStatus.hasWalletConnection) {
-            setConnectionStatus((prev) => ({
-                ...prev,
-                hasWalletConnection: true,
-            }));
+        const response = refreshOrConnectUserData();
+        if (response.ok) {
+            if (!connectionStatus.hasWalletConnection) {
+                setConnectionStatus((prev) => ({
+                    ...prev,
+                    hasWalletConnection: true,
+                }));
+            }
+            console.log('Connection Status:', connectionStatus);  // Check state update
         }
-        console.log('Connection Status:', connectionStatus);  // Check state update
+        else
+            showAlert("error", "No wallet found. Try Downloading Metamask")
+        console.log("no wallet found");
     };
 
 
@@ -74,6 +82,13 @@ const Navigation: React.FC<NavigationProps> = ({
 
     return (
         <div className={styles.container}>
+            {alertStatus.isVisible && (
+                <CustomAlert
+                    type={alertStatus.type}
+                    message={alertStatus.message}
+                    onClose={() => showAlert(null, '')}
+                />
+            )}
             <div className={styles.titleContainer}>
                 <div className={styles.titleSymbolContainer}>
                     <h2 className={styles.titleItem}>BitcoinDollar</h2>

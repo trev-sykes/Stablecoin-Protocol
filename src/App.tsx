@@ -22,7 +22,7 @@ function App() {
   // Track screen width using the custom hook
   const windowWidth = useWindowWidth();
 
-  useRenderMouseStalker();
+  // useRenderMouseStalker();
   const { isSignInLoadingState, refreshOrConnectUserData, chainId, ...userState } = useSignIn();
   const { refreshProtocolState, isLoadingProtocolState, ...protocolState } = useProtocolRead();
   const { formInputs, handleInputChange } = useForm({ deposit: '', mint: '' });
@@ -128,7 +128,7 @@ function App() {
               />
             )}
 
-            {active === 'borrowing' && (
+            {active === 'borrowing' && userState.signer && (
               <MintForm
                 bitcoinPrice={protocolState.bitcoinPrice}
                 mint={mint}
