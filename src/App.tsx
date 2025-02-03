@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Navigation from "./components/navigation/Navigation";
 import './App.css';
 import { useSignIn } from './hooks/web3/useSignIn';
-import { useRenderMouseStalker } from "./hooks/display/useMouseStalker";
+// import { useRenderMouseStalker } from "./hooks/display/useMouseStalker";
 import { useProtocolRead } from './hooks/protocol/useProtocolRead';
 import { ProtocolStats } from './components/protocolStats/ProtocolStats';
 import { useForm } from './hooks/useForm';
