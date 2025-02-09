@@ -1,19 +1,18 @@
 .container {
   display: flex;
-  /* Align items horizontally */
   width: 100%;
   height: 100vh;
-  /* Make the container take full height */
 }
 
 .navigation {
-  width: 200px;
-  /* Fixed width for the navigation */
-  background-color: #f4f4f4;
-  /* Example background color */
+  width: 75px;
+  background: #f4f4f4;
+  background: linear-gradient(to-right, white, black);
   height: 100vh;
-  /* Make the navigation take full height */
-  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+
 }
 
 .dashboard {
@@ -29,6 +28,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-right: 75px;
 }
 
 .signInContainer {
@@ -78,5 +78,19 @@
 
   100% {
     transform: rotate(90deg) translateY(-50px);
+  }
+}
+
+@media (max-width: 900px) {
+  .navigation {
+    width: 20px;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dashboard {
+    margin-left: 20px;
+
   }
 }

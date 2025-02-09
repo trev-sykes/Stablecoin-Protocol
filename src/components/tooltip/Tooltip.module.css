@@ -1,0 +1,19 @@
+.tooltipContainer {
+    width: 100%;
+    height: auto;
+    position: relative;
+    /* Positioning context for child elements */
+}
+
+.context {
+    position: fixed;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-55px) translateX(25px);
+    transition: opacity 250ms ease, transform 1s ease;
+}
+
+.context.visible {
+    opacity: 1;
+}
