@@ -8,10 +8,12 @@ import { Portfolio } from './pages/portfolio/Portfolio';
 import { Protocol } from './pages/protocol/Protocol';
 import { Collateral } from './pages/collateral/Collateral';
 import { Mint } from './pages/mint/Mint';
+import { Liquidation } from './pages/liquidation/Liquidation';
 import { useWindowWidth } from './hooks/useWindowWidth';
 import { Alert } from './components/alert/Alert';
 import { CircleLoader } from 'react-spinners';
 import TestnetNotice from './components/testnetNotice/TestnetNotice';
+import useWeb3Store from './store/useWeb3Store';
 
 /**
  * The main App component that handles routing, internet connection status,
@@ -20,12 +22,22 @@ import TestnetNotice from './components/testnetNotice/TestnetNotice';
  * Uses hooks to determine the user's internet connection and the window width 
  * for responsive design.
  * 
- * @returns {JSX.Element} The main App component JSX with routes, alerts, and dashboard content.
+ * @returns JSX.Element The main App component JSX with routes, alerts, and dashboard content.
  */
 function App() {
-  const windowWidth = useWindowWidth();
-  const { isOnline, checkInternetConnection } = useInternetConnectionStore();
 
+  const windowWidth = useWindowWidth();
+  const {
+    isOnline,
+    checkInternetConnection
+  } = useInternetConnectionStore();
+
+  const {
+    readContract,
+    initializeProvider,
+    jsonRpcProvider,
+    fetchUsersFromEvents
+  } = useWeb3Store();
   /**
  * useEffect hook to check internet connection status on mount and 
  * whenever the connection status changes.
@@ -36,6 +48,17 @@ function App() {
     checkInternetConnection();
     console.log(`You Are ${isOnline ? 'Online' : 'Offline'}`)
   }, [isOnline]);
+  useEffect(() => {
+    if (!jsonRpcProvider) {
+      initializeProvider();
+      console.log("Provider initialized");
+    }
+  }, [])
+  useEffect(() => {
+    if (readContract) {
+      fetchUsersFromEvents();
+    }
+  }, [initializeProvider, readContract]);
 
   return (
     <Router>
@@ -58,6 +81,7 @@ function App() {
                 <Route path="/protocol" element={<Protocol />} />
                 <Route path="/collateral" element={<Collateral />} />
                 <Route path="/borrowing" element={<Mint />} />
+                <Route path="/liquidation" element={<Liquidation />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             ) : (

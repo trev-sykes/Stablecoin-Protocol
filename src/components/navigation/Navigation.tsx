@@ -76,7 +76,7 @@ export const Navigation: React.FC = () => {
                     disabled={!isOnline}
                 />
                 <ConditionalLink
-                    to={"/liquidations"}
+                    to={"/liquidation"}
                     children={
                         <Droplet className={`${styles.menuItem}`} />
                     }

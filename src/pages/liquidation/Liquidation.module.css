@@ -1,0 +1,66 @@
+/* Liquidation.module.css */
+.container {
+    margin-left: 70px;
+}
+
+.userList {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+}
+
+.sectionTitle {
+    margin-bottom: var(--space-sm);
+}
+
+.liquidatableSection,
+.nonLiquidatableSection {
+    width: 48%;
+    background-color: var(--color-neutral-200);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.userItem {
+    display: flex;
+    align-items: center;
+    padding: var(--space-sm);
+    border-bottom: 1px solid #ddd;
+    font-size: 1.1rem;
+    gap: var(--space-xs);
+}
+
+.userItem:last-child {
+    border-bottom: none;
+}
+
+.liquidatableSection {
+    background-color: var(--color-neutral-100);
+}
+
+.nonLiquidatableSection {
+    background-color: var(--color-neutral-100);
+}
+
+.liquidatableSection h2,
+.nonLiquidatableSection h2 {
+    color: #4caf50;
+    /* Green for liquidatable */
+}
+
+.nonLiquidatableSection h2 {
+    color: #f44336;
+    /* Red for non-liquidatable */
+}
+
+.userItem span {
+    font-weight: bold;
+    color: var(--color-neutral-500);
+}
+
+/* Styling for the Blockies avatar */
+.blockieAvatar {
+    border-radius: 50%;
+    margin-right: var(--space-md);
+}

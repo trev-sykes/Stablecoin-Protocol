@@ -3,10 +3,8 @@ import styles from "./Mint.module.css";
 import useWeb3Store from "../../store/useWeb3Store";
 import useAlertStore from "../../store/useAlertStore";
 import { useProtocol } from "../../hooks/useProtocol";
-import useFormStore from "../../store/useFormStore";
 import { handleError } from "../../utils/handleError";
-import { handleCheckWeb3Connection } from "../../utils/handleCheckWeb3Connection";
-import { handleInputParams } from "../../utils/handleInputParams";
+import { handleValidateTransactionParams } from "../../utils/handleValidateTransactionParams";
 import { ethers } from "ethers";
 import { Hero } from "../../components/hero/Hero";
 import { SignInNotification } from "../../components/signInNotification/SignInNotification";
@@ -18,8 +16,6 @@ import { FormSection } from "../../components/formSection/FormSection";
 export const Mint: React.FC = () => {
     const {
         transactionSigner,
-        signerAddress,
-        writeContract,
         userState
     } = useWeb3Store();
 
@@ -27,23 +23,18 @@ export const Mint: React.FC = () => {
 
     const { handleMint, handleBurn } = useProtocol();
 
-    const { formInputs } = useFormStore();
-
     const [activeSection, setActiveSection] = React.useState<'mint' | 'burn'>('mint');
 
     /**
      * Mints BTCd using available collateral
      */
     const mint = async () => {
-        if (!transactionSigner) return;
-        if (!handleCheckWeb3Connection(writeContract, signerAddress, showAlert)) return;
-
-        const amount = formInputs.mint;
-        if (!handleInputParams('mint', amount, showAlert, userState?.userMaxMintableAmount)) return;
-
+        const amount = handleValidateTransactionParams('mint', userState?.userMaxMintableAmount);
+        if (!amount || amount === '0' || amount == 0) return;
         try {
             showAlert("Mint Started!", "started");
-            const tx = await handleMint(transactionSigner, writeContract, amount, showAlert);
+            const tx = await handleMint(amount);
+            showAlert("Mint Pending", "pending");
             await tx.wait();
             showAlert("Mint Complete", "success");
         } catch (err: any) {
@@ -56,14 +47,12 @@ export const Mint: React.FC = () => {
      * Burns BTCd to reduce debt
      */
     const burn = async () => {
-        if (!transactionSigner) return;
-
-        const burnAmount = formInputs.burn;
-        if (!handleCheckWeb3Connection(writeContract, signerAddress, showAlert)) return;
-
+        const amount = handleValidateTransactionParams('burn', userState?.userInformation.totalBitcoinDollarsMinted);
+        if (!amount || amount === '0' || amount == 0) return;
         try {
             showAlert("Burn Started!", "started");
-            const tx = await handleBurn(transactionSigner, writeContract, burnAmount, showAlert);
+            const tx = await handleBurn(amount);
+            showAlert("Burn Pending", "pending");
             await tx.wait();
             showAlert("Burn Complete", "success");
         } catch (err: any) {

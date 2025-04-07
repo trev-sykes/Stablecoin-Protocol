@@ -1,5 +1,6 @@
 import { BarLoader } from "react-spinners";
 import styles from "./card.module.css"
+import useWalletStore from "../../store/useWalletStore";
 //
 interface CardProps {
     /** Optional icon to display in the card. */
@@ -14,23 +15,30 @@ interface CardProps {
  * Displays a card with an optional icon, title, and a description.
  * If no description is provided, a loading spinner is shown.
  */
-export const Card: React.FC<CardProps> = ({ icon, title, description }) => (
-    <div className={styles.featureCard}>
-        {icon && (
-            <div className={styles.icon}>{icon}</div>  // Render icon if provided
-        )}
-        {title && (
-            <h3>{title}</h3>  // Render title if provided
-        )}
-        {description
-            ? (
-                <p>{description}</p>  // Render description or number {/* Show loader if no description */}
-            )
-            : (
-                <div className={styles.loaderContainer}> {/* Show loader if no description */}
-                    <BarLoader />
-                </div>
-            )
-        }
-    </div>
-);
+export const Card: React.FC<CardProps> = ({ icon, title, description }) => {
+    const { isDetecting } = useWalletStore();
+    return (
+        <div className={styles.featureCard}>
+            {icon && (
+                <div className={styles.icon}>{icon}</div>  // Render icon if provided
+            )}
+            {title && (
+                <h3>{title}</h3>  // Render title if provided
+            )}
+            {description
+                ? (
+                    <p>{description}</p>  // Render description or number {/* Show loader if no description */}
+                )
+                : !isDetecting
+                    ? (
+                        <div className={styles.loaderContainer}> {/* Show loader if no description */}
+                            <BarLoader />
+                        </div>
+                    )
+                    : (
+                        <></>
+                    )
+            }
+        </div>
+    )
+};

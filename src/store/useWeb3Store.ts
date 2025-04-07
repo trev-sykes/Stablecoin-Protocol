@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ethers } from "ethers";
+import { ethers, EventLog, Log } from "ethers";
 import bitcoinDollarEngineABI from "../contracts/bitcoinDollarEngine/bitcoinDollarEngineABI";
 import bitcoinDollarEngineAddress from "../contracts/bitcoinDollarEngine/bitcoinDollarEngineAddress";
 import useWalletStore from "./useWalletStore";
@@ -46,10 +46,12 @@ interface Web3State {
     writeContract: ethers.Contract | null;
     contractState: ContractState | null;
     userState: UserState | null;
+    users: string[] | null;
     /** Initializes the read-only provider and fetches contract state */
     initializeProvider: () => Promise<void>;
     /** Connects user wallet and initializes transaction signer */
     initializeSigner: () => Promise<void>;
+    fetchUsersFromEvents: Function;
     /** Disconnects from the blockchain */
     disconnect: () => void;
 }
@@ -67,7 +69,7 @@ const useWeb3Store = create<Web3State>((set) => ({
     writeContract: null,
     contractState: null,
     userState: null,
-
+    users: null,
     initializeProvider: async () => {
 
 
@@ -205,6 +207,36 @@ const useWeb3Store = create<Web3State>((set) => ({
             console.error("Signer initialization failed:", error.message);
             set({ transactionSigner: null, signerAddress: "", writeContract: null });
             throw error;
+        }
+    },
+    fetchUsersFromEvents: async () => {
+        const { readContract } = useWeb3Store.getState();
+
+        if (!readContract) {
+            console.error("❌ readContract is not initialized");
+            return [];
+        }
+
+        try {
+            const filterDeposit = readContract.filters.CollateralDeposited();
+            const filterMint = readContract.filters.BitcoinDollarMinted();
+
+            const depositLogs: (Log | EventLog)[] = await readContract.queryFilter(filterDeposit, 0, "latest");
+            const mintLogs: (Log | EventLog)[] = await readContract.queryFilter(filterMint, 0, "latest");
+
+            const allUsers = [
+                ...depositLogs.map((log: any) => log.args.user),
+                ...mintLogs.map((log: any) => log.args.user),
+            ];
+
+            const uniqueUsers = [...new Set(allUsers.map((addr) => addr.toLowerCase()))];
+
+            console.log("✅ Fetched and deduplicated users:", uniqueUsers);
+            set({ users: uniqueUsers });
+            return uniqueUsers;
+        } catch (error) {
+            console.error("❌ Error fetching users from events:", error);
+            return [];
         }
     },
     disconnect: () => {

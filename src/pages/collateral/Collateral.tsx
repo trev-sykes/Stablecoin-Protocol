@@ -3,14 +3,12 @@ import styles from "./Collateral.module.css";
 import useWeb3Store from "../../store/useWeb3Store";
 import useAlertStore from "../../store/useAlertStore";
 import { useProtocol } from "../../hooks/useProtocol";
-import { handleCheckWeb3Connection } from "../../utils/handleCheckWeb3Connection";
-import { handleInputParams } from "../../utils/handleInputParams";
 import { handleError } from "../../utils/handleError";
 import { ethers } from "ethers";
 import { Hero } from "../../components/hero/Hero";
 import { SignInNotification } from "../../components/signInNotification/SignInNotification";
 import { FormSection } from "../../components/formSection/FormSection";
-import useFormStore from "../../store/useFormStore";
+import { handleValidateTransactionParams } from "../../utils/handleValidateTransactionParams";
 
 /**
  * Collateral form component for depositing and withdrawing collateral.
@@ -21,8 +19,6 @@ export const Collateral: React.FC = () => {
      */
     const {
         transactionSigner,
-        signerAddress,
-        writeContract,
         userState
     } = useWeb3Store();
 
@@ -37,11 +33,6 @@ export const Collateral: React.FC = () => {
     const { handleDeposit, handleWithdraw } = useProtocol();
 
     /**
-     * Form hook to manage deposit and withdrawal input values.
-     */
-    const { formInputs } = useFormStore();
-
-    /**
      * Active section (deposit or withdraw).
      */
     const [activeSection, setActiveSection] = React.useState<'deposit' | 'withdraw'>('deposit');
@@ -50,12 +41,12 @@ export const Collateral: React.FC = () => {
      * Handles collateral deposit action.
      */
     const deposit = async () => {
-        if (!handleCheckWeb3Connection(writeContract, signerAddress, showAlert)) return;
-        const amount = formInputs.deposit;
-        if (!handleInputParams('deposit', amount, showAlert)) return;
+        const amount = handleValidateTransactionParams('deposit');
+        if (!amount || amount == '0' || amount == 0) return;
         try {
             showAlert("Deposit Started!", "started");
-            const tx = await handleDeposit(transactionSigner, writeContract, amount, showAlert);
+            const tx = await handleDeposit(amount);
+            showAlert("Deposit Pending", "pending");
             await tx.wait();
             showAlert("Deposit Complete", "success");
         } catch (err) {
@@ -67,12 +58,12 @@ export const Collateral: React.FC = () => {
      * Handles collateral withdrawal action.
      */
     const withdraw = async () => {
-        if (!handleCheckWeb3Connection(writeContract, signerAddress, showAlert)) return;
-        const amount = formInputs.withdraw;
-        if (!handleInputParams('withdraw', amount, showAlert)) return;
+        const amount = handleValidateTransactionParams('withdraw');
+        if (!amount || amount == '0' || amount == 0) return;
         try {
             showAlert("Withdraw Started!", "started");
-            const tx = await handleWithdraw(writeContract, amount, showAlert);
+            const tx = await handleWithdraw(amount);
+            showAlert("Withdraw Pending", "pending");
             await tx.wait();
             showAlert("Withdraw Complete", "success");
         } catch (err) {

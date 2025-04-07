@@ -78,7 +78,7 @@ const useWalletStore = create<WalletState>((set) => ({
                 inactivityTimer = setTimeout(() => {
                     window.removeEventListener("eip6963:announceProvider", handler as EventListener);
                     if (maxTimeoutTimer) clearTimeout(maxTimeoutTimer);
-                    set({ availableWallets: wallets, isDetecting: false });
+                    set({ availableWallets: wallets });
                     resolve(wallets);
                 }, 250); // 250ms inactivity period
             };
@@ -104,6 +104,7 @@ const useWalletStore = create<WalletState>((set) => ({
         try {
             const { initializeSigner } = useWeb3Store.getState();
             await initializeSigner();
+            set({ isDetecting: false });
         } catch (error) {
             console.error("Failed to initialize signer:", error);
         }

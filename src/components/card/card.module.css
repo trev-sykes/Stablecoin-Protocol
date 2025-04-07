@@ -46,4 +46,6 @@
     align-items: center;
     justify-content: center;
     opacity: 0.25;
+    position: relative;
+    z-index: 1;
 }

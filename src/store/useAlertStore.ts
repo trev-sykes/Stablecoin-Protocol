@@ -28,7 +28,7 @@ const useAlertStore = create<AlertState>((set) => ({
         set({ type, message, isVisible: true });
         timeoutId = setTimeout(() => {
             set({ type: null, message: null, isVisible: false });
-        }, 15000);
+        }, 25000);
     },
 
     hideAlert: () => {
