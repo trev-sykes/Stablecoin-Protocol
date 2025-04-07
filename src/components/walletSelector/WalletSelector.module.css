@@ -15,7 +15,7 @@
 }
 
 .modal {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, var(--color-neutral-100) 0%, var(--color-neutral-200) 100%);
     border-radius: 16px;
     padding: 28px;
     width: 100%;
@@ -42,15 +42,15 @@
     margin: 0;
     font-size: 1.6rem;
     font-weight: 600;
-    background: linear-gradient(45deg, #ff007a, #9d00ff);
+    background: linear-gradient(90deg, #000000 0%, #616161 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 2px 10px rgba(255, 0, 122, 0.2);
+    text-shadow: 0 2px 10px rgba(43, 43, 43, 0.2);
 }
 
 .closeButton {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
     border: none;
     cursor: pointer;
     padding: 6px;
@@ -70,7 +70,7 @@
 
 .sectionTitle {
     font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--color-neutral-700);
     margin: 16px 0 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -96,13 +96,13 @@
     text-align: left;
     position: relative;
     overflow: hidden;
-    color: white;
+    color: var(--color-neutral-800);
 }
 
 .walletOption:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(125, 0, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(80, 80, 80, 0.3);
 }
 
 .walletOption:active {

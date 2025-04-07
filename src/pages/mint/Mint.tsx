@@ -81,13 +81,13 @@ export const Mint: React.FC = () => {
                 {!transactionSigner && <SignInNotification />}
                 <div className="sliderContainer">
                     <button
-                        className={`${styles.sliderButton} ${activeSection === 'mint' ? styles.active : ''}`}
+                        className={`${"sliderButton"} ${activeSection === 'mint' ? "active" : ''}`}
                         onClick={() => setActiveSection('mint')}
                     >
                         Mint
                     </button>
                     <button
-                        className={`${styles.sliderButton} ${activeSection === 'burn' ? styles.active : ''}`}
+                        className={`${"sliderButton"} ${activeSection === 'burn' ? "active" : ''}`}
                         onClick={() => setActiveSection('burn')}
                     >
                         Burn
