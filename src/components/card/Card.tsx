@@ -1,5 +1,5 @@
 import { BarLoader } from "react-spinners";
-import styles from "./Card.module.css";
+import styles from "./card.module.css"
 //
 interface CardProps {
     /** Optional icon to display in the card. */
