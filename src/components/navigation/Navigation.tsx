@@ -1,171 +1,103 @@
-import { useEffect, useState } from "react";
-import { House, Bitcoin, User, Plus, Flame, LogIn } from "lucide-react";
-import { useAlert } from '../../hooks/useAlert';;
-import { CustomAlert } from '../../utils/customAlert/CustomAlert';
-import { Tooltip } from "../tooltip/Tooltip";
-import styles from "./Navigation.module.css";
-import bitcoinDollarEngineAddress from "../../contracts/bitcoinDollar/bitcoinDollarAddress";
+import { useState } from "react";
+import ConditionalLink from "../conditionalLink/ConditionalLink";
+import { House, Bitcoin, User, Plus, Flame, LogIn, Droplet } from "lucide-react";
+import useWalletStore from "../../store/useWalletStore";
+import useWeb3Store from "../../store/useWeb3Store";
+import useInternetConnectionStore from "../../store/useInternetConnectionStore";
+import WalletSelector from "../walletSelector/WalletSelector";
+import { bitcoinDollar } from "../../contracts/bitcoinDollar/index";
 import BitcoinDollarSymbol from "../bitcoinDollarSymbol/BitcoinDollarSymbol";
+import styles from "./Navigation.module.css";
+import { WalletInfo } from "./WalletInfo";
+import { useWindowWidth } from "../../hooks/useWindowWidth";
 
-interface NavigationProps {
-    refreshOrConnectUserData: any;
-    signer?: any;
-    active: any;
-    setActive: any;
-    chainId: any;
-}
-
-const Navigation: React.FC<NavigationProps> = ({
-    refreshOrConnectUserData,
-    signer,
-    active,
-    setActive
-}) => {
-    const [width, setWidth] = useState<number>(window.innerWidth);
-    const { alertStatus, showAlert } = useAlert();
-    const [connectionStatus, setConnectionStatus] = useState({
-        hasInternetConnection: false,
-        hasWalletConnection: false,
-    });
-
-    useEffect(() => {
-        const handleWidth = () => {
-            setWidth(window.innerWidth);
-        }
-        window.addEventListener('resize', handleWidth);
-
-        return () => {
-            window.removeEventListener('resize', handleWidth);
-        }
-
-    }, [width])
-    const checkInternet = () => {
-        return navigator.onLine;
-    };
-
-    const handleClick = async () => {
-        const success = await refreshOrConnectUserData();
-
-        if (success) {
-            setConnectionStatus((prev) => ({
-                ...prev,
-                hasWalletConnection: true,
-            }));
-        } else {
-            showAlert("error", "No wallet found or sign-in was canceled. Try downloading MetaMask.");
-        }
-
-        console.log("Connection Status:", connectionStatus);  // Check state update
-    };
-
-
-
-    const updateActive = (newState: string) => {
-        if (!connectionStatus.hasWalletConnection && newState != 'protocol' && newState != 'home' || !connectionStatus.hasInternetConnection)
-            return;
-        if (newState !== active) {
-            setActive(newState);
+/**
+ * Navigation bar for app routing and wallet connection
+ */
+export const Navigation: React.FC = () => {
+    const { transactionSigner } = useWeb3Store();
+    const { detectWallets, setWalletAndSigner } = useWalletStore();
+    const { isOnline } = useInternetConnectionStore();
+    const windowWidth = useWindowWidth();
+    const [isWalletSelectorOpen, setIsWalletSelectorOpen] = useState<boolean>(false);
+    // Handle wallet selection
+    const handleWalletSelect = async (walletName: string) => {
+        try {
+            await detectWallets();
+            setWalletAndSigner(walletName);
+            setIsWalletSelectorOpen(false);
+        } catch (error: any) {
         }
     };
-
-    useEffect(() => {
-        const response = checkInternet();
-        if (!response) {
-            setConnectionStatus((prev) => ({
-                ...prev,
-                hasInternetConnection: false,
-            }));
-            return;
-        }
-        setConnectionStatus((prev) => ({
-            ...prev,
-            hasInternetConnection: true,
-        }));
-    }, []);
-
     return (
         <div className={styles.container}>
-            {alertStatus.isVisible && (
-                <CustomAlert
-                    type={alertStatus.type}
-                    message={alertStatus.message}
-                    onClose={() => showAlert(null, '')}
-                />
-            )}
             <div className={styles.titleContainer}>
                 <a
-                    className={styles.link}
-                    href={`${`https://sepolia.etherscan.io/token/${bitcoinDollarEngineAddress}`}`}
+                    href={`${`https://sepolia.etherscan.io/token/${bitcoinDollar.address}`}`}
                     target='_blank'
                 >
-                    {width > 900 && <BitcoinDollarSymbol width={50} />}
-                    {width < 900 && <BitcoinDollarSymbol width={30} />}
+                    {windowWidth > 900 ? <BitcoinDollarSymbol width={40} /> : <BitcoinDollarSymbol width={30} />}
                 </a>
             </div>
             <div className={styles.menu}>
-                <Tooltip context={"Home"} >
-                    <House
-                        onClick={() => updateActive('home')}
-                        className={`${styles.menuItem}  ${active == 'home' ? styles.active : ''} ${styles.connected}`}
-                    />
-                </Tooltip>
-                <Tooltip context={"User Account"} >
-                    <User
-                        aria-disabled={!connectionStatus.hasWalletConnection}
-                        onClick={() => updateActive("portfolio")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "portfolio" ? styles.active : ""}`}
-                    />
-                </Tooltip>
-                <Tooltip context={"Protocol Information"} >
-                    <Bitcoin
-                        onClick={() => updateActive("protocol")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasInternetConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "protocol" ? styles.active : ""}`}
-                    />
-                </Tooltip>
-                <Tooltip context={"Collateral & Deposits"}>
-                    <Plus
-                        onClick={() => updateActive("collateral")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "collateral" ? styles.active : ""}`}
-                    />
-                </Tooltip>
-                <Tooltip context={"Minting & Burning"}>
-                    <Flame
-                        onClick={() => updateActive("borrowing")}
-                        className={`${styles.menuItem} ${!connectionStatus.hasWalletConnection
-                            ? styles.noConnection
-                            : styles.connected
-                            } ${active === "borrowing" ? styles.active : ""}`}
-                    />
-                </Tooltip>
+                <ConditionalLink
+                    to={"/"}
+                    children={
+                        <House className={`${styles.menuItem}`} />
+                    }
+                    disabled={!isOnline}
+                />
+                <ConditionalLink
+                    to={"/portfolio"}
+                    children={
+                        <User className={styles.menuItem} />
+                    }
+                    disabled={!isOnline}
+                />
+                <ConditionalLink
+                    to={"/protocol"}
+                    children={
+                        <Bitcoin className={`${styles.menuItem}`} />
+                    }
+                    disabled={!isOnline}
+                />
+                <ConditionalLink
+                    to={"/collateral"}
+                    children={
+                        <Plus className={`${styles.menuItem}`} />
+                    }
+                    disabled={!isOnline}
+                />
+                <ConditionalLink
+                    to={"/borrowing"}
+                    children={
+                        <Flame className={`${styles.menuItem}`} />
+                    }
+                    disabled={!isOnline}
+                />
+                <ConditionalLink
+                    to={"/liquidations"}
+                    children={
+                        <Droplet className={`${styles.menuItem}`} />
+                    }
+                    disabled={!isOnline}
+                />
             </div>
             <div className={styles.connectContainer}>
-                {connectionStatus.hasWalletConnection && (
-                    <Tooltip context={`0x...${signer && signer.address && signer.address.toString().slice(signer.address.length - 5, signer.address.length)}`}>
-                        <a href={`https://sepolia.etherscan.io/address/${signer ? signer.address : null}`}
-                            target="_blank"
-                            rel="noopener noreferrer">0x
-                        </a>
-                    </Tooltip>
+                {!transactionSigner ? (
+                    <div className={`${styles.connectButton} ${!isOnline ? "disabled" : ""}`} onClick={() => setIsWalletSelectorOpen(true)}>
+                        <LogIn size={windowWidth > 900 ? 30 : 25} />
+                    </div>
+                ) : (
+                    <WalletInfo
+                    />
                 )}
-                {!connectionStatus.hasWalletConnection && (
-                    <Tooltip context={'Log In'}>
-                        <LogIn
-                            onClick={handleClick}
-                        />
-                    </Tooltip>
-                )}
+                <WalletSelector
+                    isOpen={isWalletSelectorOpen}
+                    onClose={() => setIsWalletSelectorOpen(false)}
+                    onSelectWallet={handleWalletSelect}
+                />
             </div>
-        </div >
+        </div>
     );
 };
-
-export default Navigation;

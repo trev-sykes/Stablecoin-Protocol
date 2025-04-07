@@ -1,0 +1,24 @@
+.menuItemContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 74px;
+    background-color: none;
+    border: 1px solid white;
+}
+
+.menuItemContainer.active {
+    background-color: #cae3ff;
+
+}
+
+.link {
+    text-decoration: none;
+}
+
+@media (max-width: 900px) {
+    .menuItemContainer {
+        width: 30px;
+
+    }
+}

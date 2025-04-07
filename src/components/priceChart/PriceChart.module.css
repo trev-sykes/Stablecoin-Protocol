@@ -1,9 +1,35 @@
 .container {
-    max-height: 301px;
+    max-height: 500px;
+    /* Allow chart to scale based on parent */
+    padding: 1rem;
+    background-color: var(--color-neutral-100);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-@media (max-width: 600px) {
-    .container {
-        width: 100%;
-    }
+.chartHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chartTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-accent, #006379);
+}
+
+.offChain {
+    font-style: italic;
+}
+
+.offChainDays {
+    font-size: .95rem;
+}
+
+.currentPrice {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-neutral-900);
 }

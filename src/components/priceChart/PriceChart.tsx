@@ -1,6 +1,9 @@
+/**
+ * Price chart component for displaying historical price data
+ */
 import React from 'react';
 import styles from "./PriceChart.module.css";
-import { displays } from '../../utils/Format/Format';
+import { formatter } from '../../utils/handleFormat';
 import { Line } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -11,6 +14,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler
 } from "chart.js";
 
 ChartJS.register(
@@ -20,25 +24,32 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
-
+/**
+ * Data structure for price data points
+ */
 interface PriceDataPoint {
     timestamp: number;
     price: number;
 }
-
+/**
+ * Props for the PriceChart component
+ */
 interface PriceChartProps {
     title: string;
-    historicalData?: PriceDataPoint[];
+    historicalData: PriceDataPoint[] | null;
     height?: number;
     customOptions?: any;
 }
-
+/**
+ * Chart component for displaying historical price data
+ */
 export const PriceChart: React.FC<PriceChartProps> = ({
     title,
     historicalData,
-    height = 300,
+    height = 500,
     customOptions = {}
 }) => {
     const defaultChartOptions = {
@@ -71,8 +82,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({
             },
             y: {
                 grid: {
-                    display: false,
-                    color: 'rgba(0, 0, 0, 0.1)'
+                    display: false
                 },
                 ticks: {
                     callback: (value: any) => `$${value}`
@@ -80,7 +90,9 @@ export const PriceChart: React.FC<PriceChartProps> = ({
             }
         }
     };
-
+    /**
+     * Processes and formats the chart data from historical price points
+     */
     const chartData = React.useMemo(() => {
         if (!historicalData?.length) return null;
 
@@ -90,12 +102,12 @@ export const PriceChart: React.FC<PriceChartProps> = ({
         );
 
         return {
-            labels: validData.map(point => displays.toFormattedDate(point.timestamp)),
+            labels: validData.map(point => formatter.toFormattedDate(point.timestamp)),
             datasets: [{
                 label: title,
                 data: validData.map(point => point.price),
-                borderColor: "rgba(75, 192, 192, 1)",
-                backgroundColor: "rgba(75, 192, 192, 0.1)",
+                borderColor: "#4BC0C0",
+                backgroundColor: "rgba(160, 230, 255, 0.2)",
                 fill: true,
                 tension: 0.4,
                 pointRadius: 0,
@@ -107,14 +119,23 @@ export const PriceChart: React.FC<PriceChartProps> = ({
     if (!chartData) return null;
 
     return (
-        <>
-            <div className={styles.container}>
-                <Line
-                    data={chartData}
-                    options={{ ...defaultChartOptions, ...customOptions }}
-                    height={height}
-                />
-            </ div>
-        </>
+        <div className={styles.container}>
+            <div className={styles.chartHeader}>
+                <span className={styles.chartTitle}>
+                    <span className={styles.offChain}>off-chain </span>
+                    Bitcoin Price
+                    <span className={styles.offChainDays}> (30 days)</span>
+                </span>
+                <span className={styles.currentPrice}>
+                    ${historicalData?.[historicalData.length - 1]?.price.toLocaleString().split('.')[0]}
+                </span>
+            </div>
+            <Line
+                data={chartData}
+                options={{ ...defaultChartOptions, ...customOptions }}
+                height={height}
+            />
+
+        </div>
     );
 };

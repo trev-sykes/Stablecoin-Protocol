@@ -17,41 +17,9 @@
 
 .dashboard {
   flex-grow: 1;
-  /* Let the dashboard take the remaining space */
-  padding: 20px;
+  padding: var(--space-lg);
   overflow-y: auto;
-  /* Allows scrolling in case of overflow */
-  background-color: #fff;
-}
-
-.protocolGridContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-right: 75px;
-}
-
-.signInContainer {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.arrow {
-  position: absolute;
-  bottom: 1.5%;
-  left: 15%;
-  transform: rotate(90deg) translateY(-50px);
-  width: 35px;
-  height: 35px;
-  animation: left-right 2s infinite forwards;
-}
-
-.signInTitle {
-  font-size: 4rem;
-  font-family: Geneva;
+  background-color: var(--color-neutral-300);
 }
 
 .errorContainer {
@@ -61,36 +29,4 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-@keyframes left-right {
-  0% {
-    transform: rotate(90deg) translateY(-50px);
-  }
-
-  50% {
-    transform: rotate(90deg) translateY(25px);
-  }
-
-  75% {
-    transform: rotate(90deg) translateY(0);
-  }
-
-  100% {
-    transform: rotate(90deg) translateY(-50px);
-  }
-}
-
-@media (max-width: 900px) {
-  .navigation {
-    width: 20px;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-  }
-
-  .dashboard {
-    margin-left: 20px;
-
-  }
 }

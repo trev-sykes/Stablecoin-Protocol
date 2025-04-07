@@ -2,5 +2,6 @@
 
 interface Window {
     ethereum: any;
+    "react-blockies": any;
 }
 

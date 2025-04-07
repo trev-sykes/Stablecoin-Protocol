@@ -8,6 +8,19 @@
   --webkit-font-smoothing: antialiased;
   --moz-osx-font-smoothing: grayscale;
 
+  --title-font-size: clamp(2rem, 5vw, 3.5rem);
+  --title-font-weight: 700;
+
+  --h2-font-size: clamp(1.75rem, 4vw, 2.75rem);
+
+  --h3-font-size: clamp(1.5rem, 3vw, 2.5rem);
+
+  --subtitle-font-size: clamp(1rem, 2.5vw, 1.25rem);
+  --subtitle-max-width: 600px;
+
+  --text-font-size: clamp(0.875rem, 1.5vw, 1rem);
+
+
   /* Spacing System */
   --space-xs: 0.5rem;
   /* 8px */
@@ -34,10 +47,8 @@
   /* Lighter shade for hover/focus states */
   --color-primary-dark: #494949;
   /* Darker shade for active states */
+  --color-accent: #006379;
 
-  /* Neutral Backgrounds */
-  --color-neutral-50: #f8fafc;
-  /* Very light background (off-white) */
   --color-neutral-100: #f1f5f9;
   /* Light background (subtle off-white) */
   --color-neutral-200: #e2e8f0;
@@ -58,28 +69,11 @@
   /* Deep dark grey for high contrast text */
 
   /* Accent Colors (optional) */
-  --color-accent-1: #FFB6C1;
-  /* Light accent color (e.g., for warnings or highlights) */
-  --color-accent-2: #FFD700;
-  /* Golden accent for buttons, call-to-action */
-
-  --color-healthy: #42ec56;
-  --color-needs-work: #ecdb42;
-  --color-not-so-healthy: #ec9f42;
-  --color-low-health: #ef6035;
-  --color-liquidation: red;
-  --color-success: #16a34a;
-  /* Positive actions/states */
-  --color-error: #dc2626;
-  /* Negative actions/states */
-  --color-warning: #ca8a04;
-  /* Warning states */
-
+  --color-accent-1: #009bbd;
+  --color-overlay: #00000059;
   /* Component-specific */
   --nav-background: var(--color-neutral-50);
   --nav-text-color: var(--color-neutral-900);
-  --button-background: var(--color-primary);
-  --button-color: white;
   --button-hover: var(--color-primary-light);
 
   --input-background: var(--color-neutral-100);
@@ -100,13 +94,115 @@
   --date-color: var(--color-neutral-700);
 
   /* Page Background */
-  background: linear-gradient(145deg,
-      var(--color-neutral-50) 0%,
-      var(--color-neutral-100) 100%);
+  /* background: linear-gradient(145deg,
+      var(--color-neutral-100) 0%,
+      var(--color-neutral-200) 100%); */
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.dashboard {
+  background: black;
+}
+
+.title {
+  font-size: var(--title-font-size);
+  font-weight: var(--title-font-weight);
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(90deg, #000000 0%, #616161 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  background: var(background);
+  margin-bottom: var(--space-lg);
+  border-radius: var(--space-sm);
+  background: linear-gradient(145deg,
+      var(--color-neutral-100) 0%,
+      var(--color-neutral-200) 100%);
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  width: 100%;
+  padding: 20px;
+  background: var(--color-neutral-100);
+  border-radius: 12px;
+  box-shadow:
+    inset 5px 5px 1px var(--color-neutral-200),
+    6px 6px 2px var(--color-neutral-200);
+  min-height: 40vh;
+  max-height: 70vh;
+}
+
+body {
+  background: black;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+  padding: var(--space-sm);
+}
+
+.formCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: var(--card-max-width);
+  background-color: var(--color-neutral-100);
+  border-radius: 16px;
+  padding: var(--space-lg);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  margin: 0 auto;
+}
+
+.sliderContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+.sliderButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-neutral-700);
+  background-color: var(--color-neutral-200);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 48%;
+}
+
+.sliderButton:hover {
+  background-color: var(--color-neutral-300);
+  transform: scale(1.05);
+}
+
+.sliderButton.active {
+  background-color: var(--color-accent-2);
+  color: var(--button-color);
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
 }

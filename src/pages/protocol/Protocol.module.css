@@ -1,0 +1,14 @@
+/* ProtocolStats.module.css */
+.container {
+    margin-left: 70px;
+}
+
+.priceCard {
+    background: var(--color-neutral-200);
+    border-radius: 16px;
+    padding: var(--space-md);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+}

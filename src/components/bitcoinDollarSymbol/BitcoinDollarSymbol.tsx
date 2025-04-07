@@ -1,11 +1,18 @@
 import React from 'react';
 
-type Width = string | number;  // Define the Width type
+/**
+ * Type for defining the width property (either string or number).
+ */
+type Width = string | number;
 
 interface BTCdSymbolProps {
+    /** Width of the symbol component. */
     width: Width;
 }
 
+/**
+ * Displays the BTCd symbol with a customizable width.
+ */
 const BTCdSymbol: React.FC<BTCdSymbolProps> = ({ width }) => {
     return (
         <div style={{ width: width }} className="flex items-center gap-2 font-bold">

@@ -1,0 +1,11 @@
+.statItem h3 {
+    font-size: var(--h3-font-size);
+    color: var(--color-accent);
+    margin-bottom: var(--space-xs);
+    font-weight: 700;
+}
+
+.statItem p {
+    color: var(--color-neutral-700);
+    font-size: var(--text-font-size);
+}
