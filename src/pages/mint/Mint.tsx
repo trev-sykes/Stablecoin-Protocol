@@ -16,7 +16,8 @@ import { FormSection } from "../../components/formSection/FormSection";
 export const Mint: React.FC = () => {
     const {
         transactionSigner,
-        userState
+        userState,
+        fetchState
     } = useWeb3Store();
 
     const { showAlert } = useAlertStore();
@@ -37,6 +38,7 @@ export const Mint: React.FC = () => {
             showAlert("Mint Pending", "pending");
             await tx.wait();
             showAlert("Mint Complete", "success");
+            await fetchState();
         } catch (err: any) {
             handleError('Mint', err, showAlert);
             throw new Error(err.message);
@@ -55,6 +57,7 @@ export const Mint: React.FC = () => {
             showAlert("Burn Pending", "pending");
             await tx.wait();
             showAlert("Burn Complete", "success");
+            await fetchState();
         } catch (err: any) {
             handleError('Burn', err, showAlert);
             throw new Error(err.message);

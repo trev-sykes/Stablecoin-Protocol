@@ -54,6 +54,8 @@ interface Web3State {
     fetchUsersFromEvents: Function;
     /** Disconnects from the blockchain */
     disconnect: () => void;
+    /** Fetches the contract and user state */
+    fetchState: () => Promise<void>;
 }
 
 const rpcUrl = import.meta.env.VITE_INFURA_RPC_URL;
@@ -70,9 +72,9 @@ const useWeb3Store = create<Web3State>((set) => ({
     contractState: null,
     userState: null,
     users: null,
+
+    // Initialize the read-only provider
     initializeProvider: async () => {
-
-
         const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl, {
             name: "sepolia",
             chainId: 11155111,
@@ -86,26 +88,24 @@ const useWeb3Store = create<Web3State>((set) => ({
 
         try {
             const contractStateRaw = await readContract.getCurrentState();
-
             const contractState: ContractState = {
                 oraclePriceInUsd: contractStateRaw[0],
                 totalWrappedBitcoinCollateralDeposited: contractStateRaw[1],
                 totalBitcoinDollarsMinted: contractStateRaw[2],
                 protocolCollateralizationRatio: contractStateRaw[3],
             };
-
             set({ contractState });
         } catch (err) {
             console.error("Error fetching contract state:", err);
         }
 
         set({ readContract, jsonRpcProvider });
-
     },
+
+    // Initialize the signer and fetch both contract and user state
     initializeSigner: async () => {
         try {
             const { activeWallet, availableWallets } = useWalletStore.getState();
-
             if (!activeWallet) throw new Error("No wallet selected");
 
             const selectedWallet = availableWallets.find(
@@ -122,38 +122,11 @@ const useWeb3Store = create<Web3State>((set) => ({
             const targetChainId = 11155111; // Sepolia
 
             if (Number(network.chainId) !== targetChainId) {
-                try {
-                    await selectedWallet.provider.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: `0x${targetChainId.toString(16)}` }],
-                    });
-
-                    console.log("Switched to Sepolia");
-                    await new Promise((res) => setTimeout(res, 1000));
-                } catch (switchError: any) {
-                    if (switchError.code === 4902) {
-                        await selectedWallet.provider.request({
-                            method: "wallet_addEthereumChain",
-                            params: [
-                                {
-                                    chainId: `0x${targetChainId.toString(16)}`,
-                                    chainName: "Sepolia Test Network",
-                                    nativeCurrency: {
-                                        name: "Sepolia ETH",
-                                        symbol: "ETH",
-                                        decimals: 18,
-                                    },
-                                    rpcUrls: [rpcUrl],
-                                    blockExplorerUrls: ["https://sepolia.etherscan.io"],
-                                },
-                            ],
-                        });
-
-                        console.log("Added Sepolia network");
-                    } else {
-                        throw new Error("Failed to switch network: " + switchError.message);
-                    }
-                }
+                await selectedWallet.provider.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [{ chainId: `0x${targetChainId.toString(16)}` }],
+                });
+                console.log("Switched to Sepolia");
             }
 
             const accounts: string[] = await ethersProvider.send("eth_requestAccounts", []);
@@ -169,12 +142,43 @@ const useWeb3Store = create<Web3State>((set) => ({
             );
 
             const code = await ethersProvider.getCode(bitcoinDollarEngineAddress);
-            if (code === "0x") {
-                throw new Error("No contract found at address");
-            }
+            if (code === "0x") throw new Error("No contract found at address");
 
             set({ transactionSigner, signerAddress, writeContract });
 
+            // Fetch both contract and user state after signer initialization
+            await useWeb3Store.getState().fetchState();
+
+            console.log("🔵 Connected and state fetched");
+        } catch (error: any) {
+            console.error("Signer initialization failed:", error.message);
+            set({ transactionSigner: null, signerAddress: "", writeContract: null });
+            throw error;
+        }
+    },
+
+    // Fetch contract and user state
+    fetchState: async () => {
+        const { readContract, writeContract, signerAddress } = useWeb3Store.getState();
+
+        if (!readContract || !writeContract) {
+            console.error("❌ Contract not initialized");
+            return;
+        }
+
+        try {
+            // Fetch contract state (oracle price, total collateral, total minted Bitcoin Dollars, etc.)
+            const contractStateRaw = await readContract.getCurrentState();
+            const contractState: ContractState = {
+                oraclePriceInUsd: contractStateRaw[0],
+                totalWrappedBitcoinCollateralDeposited: contractStateRaw[1],
+                totalBitcoinDollarsMinted: contractStateRaw[2],
+                protocolCollateralizationRatio: contractStateRaw[3],
+            };
+
+            set({ contractState });
+
+            // Fetch user-specific state (user information, debt share, max mintable amount)
             const [
                 userInformationResponse,
                 userDebtShareResponse,
@@ -194,21 +198,21 @@ const useWeb3Store = create<Web3State>((set) => ({
                 healthFactor: userInformationResponse[5],
             };
 
-            set((state) => ({
+            set({
                 userState: {
-                    ...state.userState,
                     userInformation: userInfo,
                     userDebtShare: userDebtShareResponse,
                     userMaxMintableAmount: userMaxMintableAmountResponse,
                 },
-            }));
-            console.log("🔵 Connected");
-        } catch (error: any) {
-            console.error("Signer initialization failed:", error.message);
-            set({ transactionSigner: null, signerAddress: "", writeContract: null });
-            throw error;
+            });
+
+            console.log("✅ State successfully fetched!");
+        } catch (err) {
+            console.error("❌ Failed to fetch state:", err);
         }
     },
+
+    // Fetch users from events
     fetchUsersFromEvents: async () => {
         const { readContract } = useWeb3Store.getState();
 
@@ -236,6 +240,8 @@ const useWeb3Store = create<Web3State>((set) => ({
             return [];
         }
     },
+
+    // Disconnect from blockchain
     disconnect: () => {
         set({
             jsonRpcProvider: null,

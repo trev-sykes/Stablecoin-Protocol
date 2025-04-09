@@ -19,7 +19,8 @@ export const Collateral: React.FC = () => {
      */
     const {
         transactionSigner,
-        userState
+        userState,
+        fetchState
     } = useWeb3Store();
 
     /**
@@ -49,6 +50,7 @@ export const Collateral: React.FC = () => {
             showAlert("Deposit Pending", "pending");
             await tx.wait();
             showAlert("Deposit Complete", "success");
+            await fetchState();
         } catch (err) {
             handleError('Deposit', err, showAlert);
         }
@@ -66,6 +68,7 @@ export const Collateral: React.FC = () => {
             showAlert("Withdraw Pending", "pending");
             await tx.wait();
             showAlert("Withdraw Complete", "success");
+            await fetchState();
         } catch (err) {
             handleError('Withdraw', err, showAlert);
         }

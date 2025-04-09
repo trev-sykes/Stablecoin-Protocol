@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers, TransactionResponse } from "ethers";
 import { engine } from "../contracts/bitcoinDollarEngine/index";
 import { bitcoinDollar } from "../contracts/bitcoinDollar/index";
 import { syntheticBitcoin } from "../contracts/syntheticBitcoin/index";
@@ -29,7 +29,11 @@ export function useProtocol() {
             const currentAllowance: BigInt = await contract.allowance(transactionSigner, engine.address);
 
             if (currentAllowance < approvalAmount) {
-                await contract.approve(engine.address, ethers.MaxUint256 - 2n);
+                showAlert("Approval Started!", "started");
+                const tx: TransactionResponse = await contract.approve(engine.address, ethers.MaxUint256 - 2n);
+                showAlert("Approval Pending!", "pending");
+                await tx.wait(); // 🚨 this line is critical
+                showAlert("Approval Complete!", "success");
             }
             return true;
         } catch (err: any) {
