@@ -4,6 +4,9 @@ import useWeb3Store from "../../store/useWeb3Store";
 import { formatter } from "../../utils/handleFormat";
 import { Card } from "../../components/card/Card";
 import { Hero } from "../../components/hero/Hero";
+import { SignInNotification } from "../../components/signInNotification/SignInNotification";
+import { handleHealthFactorCalculation, HealthStatus } from "../../utils/handleHealthFactorCalculation";
+import { useEffect, useState } from "react";
 
 /**
  * Portfolio Component
@@ -16,46 +19,67 @@ import { Hero } from "../../components/hero/Hero";
  */
 export const Portfolio: React.FC = () => {
     const { transactionSigner, userState } = useWeb3Store();
+    const [health, setHealth] = useState<HealthStatus | null>(null);
+    useEffect(() => {
+        if (!userState) return;
+        const healthStatus = handleHealthFactorCalculation(userState.userInformation.healthFactor);
+        setHealth(healthStatus);
+    }, [userState]);
     return (
         <div className={styles.container}>
             <Hero>
                 <h1 className="title">Portfolio</h1>
-                {!transactionSigner && !userState && <h3>Connect Wallet</h3>}
+                {!transactionSigner && !userState && <SignInNotification />}
             </Hero>
             <div className="gridContainer">
                 <div className="grid">
-                    <Card
-                        title={userState && 'sBTC Deposits'}
-                        description={
-                            userState &&
-                            ethers.formatUnits(userState.userInformation.collateralDeposited)
-                        }
-                    />
-                    <Card
-                        title={userState && 'Deposit Value in USD'}
-                        description={
-                            userState &&
-                            new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                maximumFractionDigits: 0,
-                            }).format(Number(ethers.formatUnits(userState.userInformation.collateralValueInUsd)))
-                        }
-                    />
-                    <Card
-                        title={userState && 'Bitcoin Dollars Minted'}
-                        description={
-                            userState &&
-                            ethers.formatUnits(userState?.userInformation.totalBitcoinDollarsMinted)
-                        }
-                    />
-                    <Card
-                        title={userState && 'Debt Percentage'}
-                        description={
-                            userState &&
-                            formatter.toPercentageFromFixedPoint(userState?.userDebtShare || 0n) + '%'
-                        }
-                    />
+                    <Card>
+                        <h3>sBTC Deposited</h3>
+                        <p>
+                            {
+                                userState &&
+                                ethers.formatUnits(userState.userInformation.collateralDeposited).split('.')[0]
+                            }
+                        </p>
+                    </Card>
+                    <Card>
+                        <h3>Collateral Value (USD)</h3>
+                        <p>
+                            {
+                                userState &&
+                                new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                    maximumFractionDigits: 0,
+                                }).format(Number(ethers.formatUnits(userState.userInformation.collateralValueInUsd)))
+                            }
+                        </p>
+                    </Card>
+                    <Card>
+                        <h3>Total BTCd Minted</h3>
+                        <p>
+                            {
+                                userState &&
+                                ethers.formatUnits(userState?.userInformation.totalBitcoinDollarsMinted).split('.')[0]
+                            }
+                        </p>
+                    </Card>
+                    <Card>
+                        <h3>Debt Share %</h3>
+                        <p>
+                            {
+                                userState &&
+                                formatter.toPercentageFromFixedPoint(userState?.userDebtShare || 0n) + '%'
+                            }
+                        </p>
+                    </Card>
+                    <Card>
+                        <p aria-hidden='true'>✚</p>
+                        <h3>Health Status</h3>
+                        {userState && health && (
+                            <p style={{ color: health.color }}>{health.status}</p>
+                        )}
+                    </Card>
                 </div>
             </div>
         </div>

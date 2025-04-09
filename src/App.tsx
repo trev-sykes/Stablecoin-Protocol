@@ -22,7 +22,6 @@ import useWeb3Store from './store/useWeb3Store';
  * Uses hooks to determine the user's internet connection and the window width 
  * for responsive design.
  * 
- * @returns JSX.Element The main App component JSX with routes, alerts, and dashboard content.
  */
 function App() {
 
@@ -39,7 +38,7 @@ function App() {
     fetchUsersFromEvents
   } = useWeb3Store();
   /**
- * useEffect hook to check internet connection status on mount and 
+ * hook to check internet connection status on mount and 
  * whenever the connection status changes.
  * 
  * Logs the user's current connection status to the console.
@@ -48,15 +47,25 @@ function App() {
     checkInternetConnection();
     console.log(`You Are ${isOnline ? 'Online' : 'Offline'}`)
   }, [isOnline]);
+  /**
+ * hook to check provider 
+ * initializes once
+ * 
+ * Confirmation log to see use is online
+ */
   useEffect(() => {
     if (!jsonRpcProvider) {
       initializeProvider();
       console.log("Provider initialized");
     }
-  }, [])
+  }, []);
+  /**
+   * hook to fetch user information
+   */
   useEffect(() => {
     if (readContract) {
       fetchUsersFromEvents();
+
     }
   }, [initializeProvider, readContract]);
 

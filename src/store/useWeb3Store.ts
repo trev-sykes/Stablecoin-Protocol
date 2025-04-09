@@ -220,15 +220,12 @@ const useWeb3Store = create<Web3State>((set) => ({
         try {
             const filterDeposit = readContract.filters.CollateralDeposited();
             const filterMint = readContract.filters.BitcoinDollarMinted();
-
             const depositLogs: (Log | EventLog)[] = await readContract.queryFilter(filterDeposit, 0, "latest");
             const mintLogs: (Log | EventLog)[] = await readContract.queryFilter(filterMint, 0, "latest");
-
             const allUsers = [
                 ...depositLogs.map((log: any) => log.args.user),
                 ...mintLogs.map((log: any) => log.args.user),
             ];
-
             const uniqueUsers = [...new Set(allUsers.map((addr) => addr.toLowerCase()))];
 
             console.log("✅ Fetched and deduplicated users:", uniqueUsers);

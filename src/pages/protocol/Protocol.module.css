@@ -12,3 +12,17 @@
     flex-direction: column;
     min-height: 500px;
 }
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.cardGrid {
+    padding: var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-xl);
+}

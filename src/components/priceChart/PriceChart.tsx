@@ -38,7 +38,6 @@ interface PriceDataPoint {
  * Props for the PriceChart component
  */
 interface PriceChartProps {
-    title: string;
     historicalData: PriceDataPoint[] | null;
     height?: number;
     customOptions?: any;
@@ -47,7 +46,6 @@ interface PriceChartProps {
  * Chart component for displaying historical price data
  */
 export const PriceChart: React.FC<PriceChartProps> = ({
-    title,
     historicalData,
     height = 500,
     customOptions = {}
@@ -104,7 +102,6 @@ export const PriceChart: React.FC<PriceChartProps> = ({
         return {
             labels: validData.map(point => formatter.toFormattedDate(point.timestamp)),
             datasets: [{
-                label: title,
                 data: validData.map(point => point.price),
                 borderColor: "#4BC0C0",
                 backgroundColor: "rgba(160, 230, 255, 0.2)",
@@ -114,7 +111,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({
                 borderWidth: 2
             }]
         };
-    }, [historicalData, title]);
+    }, [historicalData]);
 
     if (!chartData) return null;
 

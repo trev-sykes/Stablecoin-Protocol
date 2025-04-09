@@ -36,3 +36,8 @@
     margin-bottom: var(--space-sm);
     color: var(--color-neutral-700);
 }
+
+.description {
+    color: var(--color-neutral-700);
+    font-size: 1.05rem;
+}

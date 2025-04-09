@@ -148,5 +148,62 @@ export function useProtocol() {
             throw new Error(err.message);
         }
     }
-    return { handleDeposit, handleMint, handleWithdraw, handleBurn, handleLiquidate, handleCanLiquidate };
+
+    /**
+     * Gets the user's current health factor.
+     * @param user The user address to check.
+     * @returns The user's health factor.
+     */
+    const handleGetHealthFactor = async (user: string) => {
+        if (!readContract) {
+            return;
+        }
+        try {
+            return await readContract.getHealthFactor(user);
+        } catch (err: any) {
+            handleError('GetHealthFactor', err, showAlert);
+            throw new Error(err.message);
+        }
+    }
+
+    /**
+     * Simulates the user's health factor after collateral change.
+     * @param user The user address to check.
+     * @param newCollateralAmount The new amount of collateral to simulate.
+     * @returns The simulated health factor after the collateral change.
+     */
+    const handleGetSimulatedHealthFactor = async (user: string, newCollateralAmount: string) => {
+        if (!readContract) {
+            return;
+        }
+        try {
+            const collateralAmount: BigInt = ethers.parseUnits(newCollateralAmount, 'ether');
+            return await readContract.getHealthFactorAfterCollateralChange(user, collateralAmount);
+        } catch (err: any) {
+            handleError('SimulateHealthFactor', err, showAlert);
+            throw new Error(err.message);
+        }
+    }
+    const handleGetLiquidationParams = async () => {
+        if (!readContract) return;
+        try {
+            return await readContract.getLiquidationParams();
+        } catch (err: any) {
+            handleError('getLiquidationParams', err, showAlert);
+            throw new Error(err.message);
+        }
+    }
+
+
+    return {
+        handleDeposit,
+        handleMint,
+        handleWithdraw,
+        handleBurn,
+        handleLiquidate,
+        handleCanLiquidate,
+        handleGetHealthFactor,
+        handleGetSimulatedHealthFactor,
+        handleGetLiquidationParams
+    };
 }

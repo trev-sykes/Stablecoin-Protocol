@@ -1,4 +1,3 @@
-// Home.tsx
 import React from 'react';
 import BitcoinDollarSymbol from '../../components/bitcoinDollarSymbol/BitcoinDollarSymbol';
 import { HeroCard } from '../../components/heroCard/HeroCard';
@@ -33,13 +32,13 @@ export const Home: React.FC = () => {
                 <div className="gridContainer">
                     <div className="grid">
                         {homeCardInfo.map((feature, index) => (
-                            <Card
-                                key={index}
-                                icon={feature.icon}
-                                title={feature.title}
-                                description={feature.description}
-                            />
+                            <Card key={index}>
+                                <div className={styles.icon}>{feature.icon}</div>
+                                <h3 className={styles.title}>{feature.title}</h3>
+                                <p className={styles.description}>{feature.description}</p>
+                            </Card>
                         ))}
+
                     </div>
                 </div>
             </section>
