@@ -8,7 +8,6 @@ import useAlertStore from "../../store/useAlertStore";
 import { UserCard } from "../../components/userCard/UserCard";
 import { Eye, Droplet } from "lucide-react";
 import { LiquidationForm } from "../../components/liquidationForm/LiquidationForm";
-import HealthFactorSimulator from "../healthfactorsimulator/HealthFactorSimulator";
 
 /**
  * Liquidation Component
@@ -112,7 +111,6 @@ export const Liquidation: React.FC = () => {
     }
     return (
         <div className={styles.container}>
-            <HealthFactorSimulator />
             <Hero>
                 <h1 className="title">Liquidation</h1>
             </Hero>
