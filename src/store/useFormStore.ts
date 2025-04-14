@@ -5,6 +5,7 @@ interface FormState {
     formInputs: { [key: string]: any };
     handleInputChange: (field: string) => (event: ChangeEvent<HTMLInputElement>) => void;
     resetForm: () => void;
+    resetFormField: any;
 }
 
 const useFormStore = create<FormState>((set) => ({
@@ -22,6 +23,13 @@ const useFormStore = create<FormState>((set) => ({
 
     resetForm: () => {
         set({ formInputs: {} });
+    },
+    resetFormField: (field: string) => {
+        set((state) => {
+            const updatedInputs = { ...state.formInputs };
+            delete updatedInputs[field];
+            return { formInputs: updatedInputs };
+        });
     },
 }));
 

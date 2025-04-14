@@ -1,15 +1,21 @@
 import useFormStore from "../../store/useFormStore";
 import useWeb3Store from "../../store/useWeb3Store";
-import styles from "./FormSection.module.css"
+import styles from "./FormSection.module.css";
+import { useState } from "react";
+import MintConfirmationModal from "../confirmationModals/confirmMint/MintConfirmationModal";
+import BurnConfirmationModal from "../confirmationModals/confirmBurn/BurnConfirmationModal";
+import DepositConfirmationModal from "../confirmationModals/confrimDeposit/DepositConfirmationModal";
+import WithdrawConfirmationModal from "../confirmationModals/confirmWithdraw/WIthdrawConfirmationModal";
+
 interface FormSectionProps {
     activeSection: string;
     inputType: 'number' | 'string';
-    handleClick: React.MouseEventHandler;
+    handleClick?: React.MouseEventHandler;
     details: number | string | null;
     placeholder?: string;
     range?: { min: number, max: number | null };
 }
-export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputType, handleClick, details, range, placeholder, }) => {
+export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputType, details, range, placeholder, }) => {
     const {
         transactionSigner,
         userState
@@ -17,6 +23,8 @@ export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputTy
     const {
         formInputs,
         handleInputChange } = useFormStore();
+    const [activeModal, setActiveModal] = useState('');
+
     return (
         <div className={`${styles.container} ${activeSection === 'deposit' ? 'active' : ''}`}>
             <div className={styles.inputGroup}>
@@ -25,11 +33,11 @@ export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputTy
                     disabled={!transactionSigner}
                     id={activeSection}
                     type={inputType}
-                    value={formInputs[activeSection]}
+                    value={formInputs[activeSection] || ''}
                     onChange={handleInputChange(activeSection)}
-                    min={range ? range.min : 1}
+                    min={range ? range.min : 0}
                     max={range && range.max ? range.max : Number.MAX_SAFE_INTEGER}
-                    placeholder={placeholder ? placeholder : ''}
+                    placeholder={placeholder && activeSection == 'withdraw' ? `${placeholder.toString().split('.')[0]} available` : placeholder ? `${placeholder.toString().split('.')[0]}` : ''}
                     className={styles.input}
                 />
             </div>
@@ -39,13 +47,13 @@ export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputTy
                         ? 'Balance'
                         : activeSection == 'mint'
                             ? 'Mintable'
-                            : 'Burnable'
-                    } {details}
+                            : 'Balance'
+                    } {details != null && details.toString().split('.')[0]} {activeSection == 'deposit' || activeSection == 'withdraw' ? 'sBTC' : 'BTCd'}
                 </p>
             )}
             <button
                 type="button"
-                onClick={handleClick}
+                onClick={() => setActiveModal(activeSection)}
                 disabled={
                     !formInputs[activeSection] ||
                     (range && range.max && parseFloat(formInputs[activeSection]) > range.max) ||
@@ -55,6 +63,26 @@ export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputTy
             >
                 {activeSection}
             </button>
+            {activeModal == 'mint' && (
+                <MintConfirmationModal
+                    onCancel={setActiveModal}
+                />
+            )}
+            {activeModal == 'burn' && (
+                <BurnConfirmationModal
+                    onCancel={setActiveModal}
+                />
+            )}
+            {activeModal == 'deposit' && (
+                <DepositConfirmationModal
+                    onCancel={setActiveModal}
+                />
+            )}
+            {activeModal == 'withdraw' && (
+                <WithdrawConfirmationModal
+                    onCancel={setActiveModal}
+                />
+            )}
         </div >
     )
 }

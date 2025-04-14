@@ -5,7 +5,8 @@ import { syntheticBitcoin } from "../contracts/syntheticBitcoin/index";
 import { ContractDetails } from "../contracts/contractInterface";
 import { handleError } from "../utils/handleError";
 import useAlertStore from "../store/useAlertStore";
-import useWeb3Store from "../store/useWeb3Store";
+import useWeb3Store, { UserState } from "../store/useWeb3Store";
+import { handleHealthFactorCalculation } from "../utils/handleHealthFactorCalculation";
 
 /**
  * Custom hook for handling protocol write operations (deposit, mint, withdraw, burn).
@@ -29,11 +30,11 @@ export function useProtocol() {
             const currentAllowance: BigInt = await contract.allowance(transactionSigner, engine.address);
 
             if (currentAllowance < approvalAmount) {
-                showAlert("Approval Started!", "started");
+                showAlert("Approval Started", "started");
                 const tx: TransactionResponse = await contract.approve(engine.address, ethers.MaxUint256 - 2n);
-                showAlert("Approval Pending!", "pending");
+                showAlert("Approval Pending", "pending");
                 await tx.wait(); // 🚨 this line is critical
-                showAlert("Approval Complete!", "success");
+                showAlert("Approval Complete", "success");
             }
             return true;
         } catch (err: any) {
@@ -130,6 +131,7 @@ export function useProtocol() {
             return;
         }
         try {
+            await handleApproveERC20ForEngine(bitcoinDollar, '0.001'); // or whatever human-readable amount makes sense
             return await writeContract.liquidate(user);
         } catch (err: any) {
             handleError('Liquidate', err, showAlert);
@@ -197,8 +199,37 @@ export function useProtocol() {
             throw new Error(err.message);
         }
     }
+    const handleGetUserInformation = async (user: string) => {
+        if (!readContract) return;
+        try {
+            const [
+                userInformationResponse,
+                userDebtShareResponse,
+                userMaxMintableAmountResponse,
+            ]: [bigint[], bigint, bigint] = await Promise.all([
+                readContract.getUserInformation(user),
+                readContract.getUserDebtShare(user),
+                readContract.getMaxMintableAmount(user),
+            ]);
+            const healthStatusForUser = handleHealthFactorCalculation(userInformationResponse[5]);
 
+            const userState: UserState = {
+                syntheticBitcoinOwned: userInformationResponse[0],
+                collateralDeposited: userInformationResponse[1],
+                collateralValueInUsd: userInformationResponse[2],
+                totalBitcoinDollarsMinted: userInformationResponse[3],
+                collateralizationRatio: userInformationResponse[4],
+                healthFactor: userInformationResponse[5],
+                healthStatus: healthStatusForUser,
+                userDebtShare: userDebtShareResponse,
+                userMaxMintableAmount: userMaxMintableAmountResponse,
+            };
+            return userState;
 
+        } catch (err: any) {
+            throw new Error(err.message);
+        }
+    }
     return {
         handleDeposit,
         handleMint,
@@ -208,6 +239,7 @@ export function useProtocol() {
         handleCanLiquidate,
         handleGetHealthFactor,
         handleGetSimulatedHealthFactor,
-        handleGetLiquidationParams
+        handleGetLiquidationParams,
+        handleGetUserInformation,
     };
 }

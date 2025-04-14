@@ -1,0 +1,12 @@
+.hero {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-xl) var(--space-md);
+    background: var(background);
+    border-radius: var(--border-radius);
+    background: linear-gradient(145deg,
+            var(--color-neutral-200) 0%,
+            var(--color-neutral-300) 100%);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--space-xl);
+}

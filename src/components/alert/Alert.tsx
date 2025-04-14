@@ -10,9 +10,12 @@ export const Alert: React.FC = () => {
      * Maps alert types to corresponding CSS classes.
      */
     const typeClasses: any = {
+        started: styles.started,
         success: styles.success,
         pending: styles.pending,
         failure: styles.failure,
+        error: styles.error,
+        warning: styles.warning,
         unknown: styles.unknown
     };
 

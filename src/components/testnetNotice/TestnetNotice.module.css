@@ -5,7 +5,7 @@
 .notice {
     margin-top: 3rem;
     padding: 1.5rem;
-    background: rgba(255, 215, 0, 0.1);
+    background: var(--color-notice);
     border-radius: 1rem;
     box-shadow: var(--box-shadow);
 }
@@ -15,10 +15,10 @@
 }
 
 .noticeContent h3 {
-    color: #333;
+    color: var(--color-neutral-900);
     margin-bottom: 0.5rem;
 }
 
 .noticeContent p {
-    color: #666;
+    color: var(--color-neutral-700);
 }

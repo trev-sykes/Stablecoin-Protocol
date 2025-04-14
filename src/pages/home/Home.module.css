@@ -1,6 +1,11 @@
 /* Home.module.css */
 .container {
     margin-left: 70px;
+    height: 100vh;
+}
+
+.hero {
+    margin-bottom: var(--sace-lx);
 }
 
 .logoSymbol {

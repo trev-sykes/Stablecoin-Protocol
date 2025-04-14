@@ -92,6 +92,11 @@
     background: #f8d7da;
 }
 
+.warning {
+    color: #ffffff;
+    background: #97000d;
+}
+
 .unknown {
     color: #6f42c1;
     background: #e2d9f3;

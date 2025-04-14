@@ -78,9 +78,9 @@ export const Collateral: React.FC = () => {
         <div className={styles.container}>
             <Hero>
                 <h1 className="title">Collateral</h1>
+                {!transactionSigner && <SignInNotification />}
             </Hero>
             <div className="formCard">
-                {!transactionSigner && <SignInNotification />}
                 <div className="sliderContainer">
                     <button
                         aria-disabled={!transactionSigner}
@@ -102,8 +102,8 @@ export const Collateral: React.FC = () => {
                         activeSection='deposit'
                         inputType='number'
                         handleClick={deposit}
-                        details={userState && ethers.formatUnits(userState.userInformation.collateralDeposited.toString())}
-                        placeholder='3 max'
+                        details={userState && ethers.formatUnits(userState.collateralDeposited.toString().split('.')[0])}
+                        placeholder='Enter amount'
                         range={{ min: 1, max: 2 }}
                     />
                 )}
@@ -112,9 +112,9 @@ export const Collateral: React.FC = () => {
                         activeSection='withdraw'
                         inputType='number'
                         handleClick={withdraw}
-                        details={userState && ethers.formatUnits(userState.userInformation.collateralDeposited.toString())}
-                        placeholder={`${userState && parseFloat(ethers.formatUnits(userState.userInformation.collateralDeposited))} available`}
-                        range={{ min: 1, max: (userState && parseFloat(ethers.formatUnits(userState.userInformation.collateralDeposited))) }}
+                        details={userState && ethers.formatUnits(userState.collateralDeposited.toString())}
+                        placeholder={`${userState && parseFloat(ethers.formatUnits(userState.collateralDeposited.toString()))}`}
+                        range={{ min: 0.000001, max: (userState && parseFloat(ethers.formatUnits(userState.collateralDeposited))) }}
                     />
                 )}
             </div>

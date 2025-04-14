@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 let timeoutId: NodeJS.Timeout;
 
-type MessageType = "started" | "success" | "pending" | "failure" | "error" | "unknown";
+export type MessageType = "started" | "success" | "pending" | "failure" | "error" | "warning" | "unknown";
 
 /**
  * State for managing alert visibility and content

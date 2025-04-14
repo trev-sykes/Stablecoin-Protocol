@@ -12,7 +12,7 @@ export const handleInputParams = (type: string, amount: any, showAlert: Function
         // Case for withdraw operation
         case 'withdraw':
             // Check if the amount is valid (greater than or equal to 1)
-            if (!amount || parseFloat(amount) < 1) {
+            if (!amount || parseFloat(amount) < 0.00001) {
                 showAlert('Please enter a valid amount (minimum 1 sBTC)', 'error'); // Show alert for invalid amount
                 return false; // Return false indicating invalid input
             }

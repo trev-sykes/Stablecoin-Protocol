@@ -23,8 +23,10 @@
 }
 
 .userItem {
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: var(--space-sm);
     border-bottom: 1px solid #ddd;
     font-size: 1.1rem;
@@ -33,6 +35,13 @@
 
 .userItem:last-child {
     border-bottom: none;
+}
+
+.userAddressContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .liquidatableSection {
@@ -62,5 +71,30 @@
 /* Styling for the Blockies avatar */
 .blockieAvatar {
     border-radius: 50%;
-    margin-right: var(--space-md);
+    margin-right: var(--space-xs);
+}
+
+.userModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.userModalContent {
+    background-color: var(--color-neutral-100);
+    padding: var(--space-md);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: var(--box-shadow);
 }

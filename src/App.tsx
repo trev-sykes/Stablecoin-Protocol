@@ -7,13 +7,16 @@ import { Home } from './pages/home/Home';
 import { Portfolio } from './pages/portfolio/Portfolio';
 import { Protocol } from './pages/protocol/Protocol';
 import { Collateral } from './pages/collateral/Collateral';
-import { Mint } from './pages/mint/Mint';
+import { Borrow } from './pages/borrow/Borrow';
 import { Liquidation } from './pages/liquidation/Liquidation';
 import { useWindowWidth } from './hooks/useWindowWidth';
 import { Alert } from './components/alert/Alert';
 import { CircleLoader } from 'react-spinners';
 import TestnetNotice from './components/testnetNotice/TestnetNotice';
 import useWeb3Store from './store/useWeb3Store';
+import { useProtocol } from './hooks/useProtocol';
+import useAlertStore from './store/useAlertStore';
+import useCoinGeckoStore from './store/useCoinGeckoStore';
 
 /**
  * The main App component that handles routing, internet connection status,
@@ -25,50 +28,73 @@ import useWeb3Store from './store/useWeb3Store';
  */
 function App() {
 
-  const windowWidth = useWindowWidth();
   const {
     isOnline,
     checkInternetConnection
   } = useInternetConnectionStore();
 
   const {
-    readContract,
+    transactionSigner,
     initializeProvider,
     jsonRpcProvider,
-    fetchUsersFromEvents
+    readContract,
   } = useWeb3Store();
+
+  const { prices, fetchPrices } = useCoinGeckoStore();
+  const { showAlert } = useAlertStore();
+
+  const { handleCanLiquidate } = useProtocol();
+  const windowWidth = useWindowWidth();
+
   /**
- * hook to check internet connection status on mount and 
- * whenever the connection status changes.
- * 
- * Logs the user's current connection status to the console.
- */
+  * Check internet connection
+  */
   useEffect(() => {
     checkInternetConnection();
     console.log(`You Are ${isOnline ? 'Online' : 'Offline'}`)
   }, [isOnline]);
+
   /**
- * hook to check provider 
- * initializes once
- * 
- * Confirmation log to see use is online
- */
-  useEffect(() => {
-    if (!jsonRpcProvider) {
-      initializeProvider();
-      console.log("Provider initialized");
-    }
-  }, []);
-  /**
-   * hook to fetch user information
+   * Initialize provider
    */
   useEffect(() => {
-    if (readContract) {
-      fetchUsersFromEvents();
-
+    if (readContract) return;
+    const handleInit = async () => {
+      if (!jsonRpcProvider) {
+        await initializeProvider();
+        console.log("Provider initialized");
+      }
     }
-  }, [initializeProvider, readContract]);
+    handleInit();
+  }, []);
 
+
+  /**
+   * Alert user if they risk liqudiation 
+   */
+  useEffect(() => {
+    if (!transactionSigner) return;
+    const checkLiquidationStatus = async () => {
+      try {
+        const canLiquidate = await handleCanLiquidate(transactionSigner.address); // Check if user can be liquidated
+        if (canLiquidate) {
+          showAlert('‼️ Health Below Threshold! You Risk Liquidation! ‼️', 'warning');
+        }
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+    checkLiquidationStatus();
+  }, [transactionSigner]);
+
+  /**
+   * Fetch prices wBTC/USD from coingecko
+   */
+  useEffect(() => {
+    if (!prices) {
+      fetchPrices();
+    }
+  }, [fetchPrices, prices]);
   return (
     <Router>
       {/* 
@@ -89,7 +115,7 @@ function App() {
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/protocol" element={<Protocol />} />
                 <Route path="/collateral" element={<Collateral />} />
-                <Route path="/borrowing" element={<Mint />} />
+                <Route path="/borrowing" element={<Borrow />} />
                 <Route path="/liquidation" element={<Liquidation />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>

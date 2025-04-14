@@ -29,7 +29,7 @@ export const handleHealthFactorCalculation = (healthFactor: BigInt): HealthStatu
 
     // Apply the thresholds to determine the health status
     if (healthFactor > HEALTHY_THRESHOLD) {
-        return { status: "Healthy", color: "green" };
+        return { status: "Healthy", color: "#22c55e" };
     } else if (healthFactor > WARNING_THRESHOLD) {
         return { status: "Needs Work", color: "#ffa600" };
     } else if (healthFactor > CRITICAL_THRESHOLD) {

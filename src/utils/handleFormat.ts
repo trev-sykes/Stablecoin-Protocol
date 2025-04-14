@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { format } from "date-fns";
 
 const toFormattedDate = (timestamp: number): string => {
@@ -32,7 +33,20 @@ function toPercentageFromFixedPoint(value: bigint): number {
 
     return percentage;
 }
+
+const formatTVLToUSD = (oraclePrice: any, totalCollateralDeposited: any) => {
+    const precision: any = 100000000n;
+    const tvl = ((oraclePrice * totalCollateralDeposited) / precision).toString();
+    const formattedTvl = parseFloat(ethers.formatUnits(tvl)).toFixed(2).toString();
+    const formattedTvlInUSD = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+    }).format(Number(formattedTvl));
+    return formattedTvlInUSD;
+}
 export const formatter = {
     toFormattedDate,
-    toPercentageFromFixedPoint
+    toPercentageFromFixedPoint,
+    formatTVLToUSD
 }
