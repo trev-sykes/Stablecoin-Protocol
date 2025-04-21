@@ -377,6 +377,7 @@ const useWeb3Store = create<Web3State>((set) => ({
         try {
             const filterLiquidated = readContract.filters.Liquidated();
             const pastLiquidations = await readContract.queryFilter(filterLiquidated, 0, "latest");
+            console.log("past liquidstion: ", pastLiquidations);
             set({ pastLiquidations })
             setLoading('fetchPastLiqudiations', false);
         } catch (err: any) {

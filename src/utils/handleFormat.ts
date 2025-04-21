@@ -34,19 +34,39 @@ function toPercentageFromFixedPoint(value: bigint): number {
     return percentage;
 }
 
-const formatTVLToUSD = (oraclePrice: any, totalCollateralDeposited: any) => {
-    const precision: any = 100000000n;
-    const tvl = ((oraclePrice * totalCollateralDeposited) / precision).toString();
-    const formattedTvl = parseFloat(ethers.formatUnits(tvl)).toFixed(2).toString();
-    const formattedTvlInUSD = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0,
-    }).format(Number(formattedTvl));
-    return formattedTvlInUSD;
+export const formatDollarsMintedToUSD = (dollars: any) => {
+    const dollarsInUSD = parseFloat(ethers.formatUnits(dollars));
+    let formatted = "";
+    if (dollarsInUSD >= 1_000_000) {
+        formatted = `${(dollarsInUSD / 1_000_000).toFixed(1)}M`;
+    } else if (dollarsInUSD >= 1_000) {
+        formatted = `${(dollarsInUSD / 1_000).toFixed(0)}K`;
+    } else {
+        formatted = `${dollarsInUSD.toFixed(0)}`;
+    }
+    return formatted;
 }
+export const formatTVLToUSD = (oraclePrice: any, totalCollateralDeposited: any) => {
+    const precision: any = 100000000n;
+
+    const tvl = (oraclePrice * totalCollateralDeposited) / precision;
+    const tvlInUSD = parseFloat(ethers.formatUnits(tvl.toString()));
+
+    let formatted = "";
+
+    if (tvlInUSD >= 1_000_000) {
+        formatted = `$${(tvlInUSD / 1_000_000).toFixed(1)}M`;
+    } else if (tvlInUSD >= 1_000) {
+        formatted = `$${(tvlInUSD / 1_000).toFixed(0)}K`;
+    } else {
+        formatted = `$${tvlInUSD.toFixed(0)}`;
+    }
+
+    return formatted;
+};
 export const formatter = {
     toFormattedDate,
     toPercentageFromFixedPoint,
-    formatTVLToUSD
+    formatTVLToUSD,
+    formatDollarsMintedToUSD
 }

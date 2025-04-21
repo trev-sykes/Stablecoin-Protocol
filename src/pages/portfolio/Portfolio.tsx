@@ -1,9 +1,7 @@
 
-import styles from "./Portfolio.module.css";
 import useWeb3Store from "../../store/useWeb3Store";
-import { Hero } from "../../components/hero/Hero";
-import { SignInNotification } from "../../components/signInNotification/SignInNotification";
-import { UserCard } from "../../components/userCard/UserCard";
+import { User } from "../../components/user/User";
+
 
 /**
  * Portfolio Component
@@ -15,20 +13,11 @@ import { UserCard } from "../../components/userCard/UserCard";
  * - Debt percentage
  */
 export const Portfolio: React.FC = () => {
-    const { transactionSigner, userState } = useWeb3Store();
+    const { userState, signerAddress } = useWeb3Store();
     return (
-        <div className={styles.container}>
-
-            <Hero>
-                <h1 className="title">Portfolio</h1>
-                {!transactionSigner && !userState && <SignInNotification />}
-            </Hero>
-            {userState &&
-                <UserCard
-
-                    user={userState}
-                />
-            }
-        </div>
+        <User
+            userState={userState && userState}
+            userAddress={signerAddress}
+        />
     );
 };

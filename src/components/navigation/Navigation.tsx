@@ -36,7 +36,7 @@ export const Navigation: React.FC = () => {
                     href={`${`https://sepolia.etherscan.io/token/${bitcoinDollar.address}`}`}
                     target='_blank'
                 >
-                    {windowWidth > 900 ? <BitcoinDollarSymbol width={40} /> : <BitcoinDollarSymbol width={30} />}
+                    {windowWidth > 900 ? <BitcoinDollarSymbol width={65} /> : <BitcoinDollarSymbol width={30} />}
                 </a>
             </div>
             <div className={styles.menu}>

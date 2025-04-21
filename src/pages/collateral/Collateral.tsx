@@ -5,10 +5,9 @@ import useAlertStore from "../../store/useAlertStore";
 import { useProtocol } from "../../hooks/useProtocol";
 import { handleError } from "../../utils/handleError";
 import { ethers } from "ethers";
-import { Hero } from "../../components/hero/Hero";
-import { SignInNotification } from "../../components/signInNotification/SignInNotification";
 import { FormSection } from "../../components/formSection/FormSection";
 import { handleValidateTransactionParams } from "../../utils/handleValidateTransactionParams";
+import { AnimatePresence, motion } from "framer-motion";
 
 /**
  * Collateral form component for depositing and withdrawing collateral.
@@ -75,49 +74,53 @@ export const Collateral: React.FC = () => {
     };
 
     return (
-        <div className={styles.container}>
-            <Hero>
-                <h1 className="title">Collateral</h1>
-                {!transactionSigner && <SignInNotification />}
-            </Hero>
-            <div className="formCard">
-                <div className="sliderContainer">
-                    <button
-                        aria-disabled={!transactionSigner}
-                        className={`${"sliderButton"} ${activeSection === 'deposit' && "active"}`}
-                        onClick={() => setActiveSection('deposit')}
-                    >
-                        Deposit
-                    </button>
-                    <button
-                        aria-disabled={!transactionSigner}
-                        className={`${"sliderButton"} ${activeSection === 'withdraw' && "active"}`}
-                        onClick={() => setActiveSection('withdraw')}
-                    >
-                        Withdraw
-                    </button>
+        <AnimatePresence mode="wait">
+            <motion.div
+                className={styles.container}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+            >
+                <div className="formCard">
+                    <div className="sliderContainer">
+                        <button
+                            aria-disabled={!transactionSigner}
+                            className={`${"sliderButton"} ${activeSection === 'deposit' && "active"}`}
+                            onClick={() => setActiveSection('deposit')}
+                        >
+                            Deposit
+                        </button>
+                        <button
+                            aria-disabled={!transactionSigner}
+                            className={`${"sliderButton"} ${activeSection === 'withdraw' && "active"}`}
+                            onClick={() => setActiveSection('withdraw')}
+                        >
+                            Withdraw
+                        </button>
+                    </div>
+                    {activeSection === 'deposit' && (
+                        <FormSection
+                            activeSection='deposit'
+                            inputType='number'
+                            handleClick={deposit}
+                            details={userState && ethers.formatUnits(userState.collateralDeposited.toString().split('.')[0])}
+                            placeholder='Enter amount'
+                            range={{ min: 1, max: 2 }}
+                        />
+                    )}
+                    {activeSection === 'withdraw' && (
+                        <FormSection
+                            activeSection='withdraw'
+                            inputType='number'
+                            handleClick={withdraw}
+                            details={userState && ethers.formatUnits(userState.collateralDeposited.toString())}
+                            placeholder={`${userState && parseFloat(ethers.formatUnits(userState.collateralDeposited.toString()))}`}
+                            range={{ min: 0.000001, max: (userState && parseFloat(ethers.formatUnits(userState.collateralDeposited))) }}
+                        />
+                    )}
                 </div>
-                {activeSection === 'deposit' && (
-                    <FormSection
-                        activeSection='deposit'
-                        inputType='number'
-                        handleClick={deposit}
-                        details={userState && ethers.formatUnits(userState.collateralDeposited.toString().split('.')[0])}
-                        placeholder='Enter amount'
-                        range={{ min: 1, max: 2 }}
-                    />
-                )}
-                {activeSection === 'withdraw' && (
-                    <FormSection
-                        activeSection='withdraw'
-                        inputType='number'
-                        handleClick={withdraw}
-                        details={userState && ethers.formatUnits(userState.collateralDeposited.toString())}
-                        placeholder={`${userState && parseFloat(ethers.formatUnits(userState.collateralDeposited.toString()))}`}
-                        range={{ min: 0.000001, max: (userState && parseFloat(ethers.formatUnits(userState.collateralDeposited))) }}
-                    />
-                )}
-            </div>
-        </div>
+            </motion.div>
+        </AnimatePresence>
     );
 };

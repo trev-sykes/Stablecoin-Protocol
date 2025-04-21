@@ -1,18 +1,24 @@
-/* Liquidation.module.css */
+/* Main container for the liquidation page */
 .container {
-    margin-left: 70px;
+    width: 100%;
+    padding: 2rem 1rem;
 }
 
+/* Flexbox for the user list to be responsive and adaptable */
 .userList {
     display: flex;
+    flex-wrap: wrap;
+    /* Allows wrapping when screen size is smaller */
     justify-content: space-between;
     gap: var(--space-md);
 }
 
+/* Section Title for liquidatable and non-liquidatable sections */
 .sectionTitle {
     margin-bottom: var(--space-sm);
 }
 
+/* Liquidatable and Non-liquidatable sections */
 .liquidatableSection,
 .nonLiquidatableSection {
     width: 48%;
@@ -20,23 +26,33 @@
     border-radius: var(--border-radius);
     padding: var(--space-lg);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
 }
 
+/* Hover effect for the sections */
+.liquidatableSection:hover,
+.nonLiquidatableSection:hover {
+    background-color: var(--color-neutral-300);
+}
+
+/* User item layout in the sections */
 .userItem {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: var(--space-sm);
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--color-neutral-400);
     font-size: 1.1rem;
     gap: var(--space-xs);
 }
 
+/* Last child of user item (no bottom border) */
 .userItem:last-child {
     border-bottom: none;
 }
 
+/* Container for user's address and avatar */
 .userAddressContainer {
     display: flex;
     flex-direction: row;
@@ -44,57 +60,60 @@
     justify-content: center;
 }
 
-.liquidatableSection {
-    background-color: var(--color-neutral-100);
+.userAddressContainer span {
+    font-family: var(--font-family);
 }
 
-.nonLiquidatableSection {
-    background-color: var(--color-neutral-100);
-}
-
-.liquidatableSection h2,
-.nonLiquidatableSection h2 {
-    color: #4caf50;
-    /* Green for liquidatable */
-}
-
-.nonLiquidatableSection h2 {
-    color: #f44336;
-    /* Red for non-liquidatable */
-}
-
-.userItem span {
-    font-weight: bold;
-    color: var(--color-neutral-500);
-}
-
-/* Styling for the Blockies avatar */
+/* Blockies avatar styling */
 .blockieAvatar {
     border-radius: 50%;
     margin-right: var(--space-xs);
 }
 
-.userModalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
-    /* dark background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    overflow: hidden;
+/* Liquidation sections */
+.liquidatableSection h2,
+.nonLiquidatableSection h2 {
+    color: var(--color-liquidation);
+    font-family: var(--font-title);
+    /* Green for liquidatable users */
 }
 
-.userModalContent {
-    background-color: var(--color-neutral-100);
-    padding: var(--space-md);
+.nonLiquidatableSection h2 {
+    color: var(--color-healthy);
+    font-family: var(--font-title);
+    /* Red for non-liquidatable users */
+}
+
+/* Liquidation Button Styling */
+.liquidationButton {
+    margin: 4rem 2rem;
+    padding: 2.5rem 4rem;
+    font-size: 1.15rem;
+    font-family: var(--font-title);
     border-radius: var(--border-radius);
-    width: 90%;
-    max-height: 90%;
-    overflow-y: auto;
-    box-shadow: var(--box-shadow);
+    background-color: var(--color-neutral-300);
+    border: 1px solid var(--color-neutral-900);
+    color: var(--color-neutral-900);
+    transition: all 150ms;
+    cursor: pointer;
+}
+
+/* Button hover effect */
+.liquidationButton:hover {
+    background-color: var(--color-neutral-900);
+    color: var(--color-neutral-100);
+}
+
+/* Adjust UserCard to take full width in the container */
+.userCardWrapper {
+    width: 100%;
+    padding: var(--space-md);
+    display: flex;
+    justify-content: center;
+}
+
+/* Modal background for user card (when selected) */
+.userModalOverlay.active {
+    display: block;
+    /* Show the overlay when user is selected */
 }

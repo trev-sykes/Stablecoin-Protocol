@@ -1,48 +1,192 @@
-import React from 'react';
-import BitcoinDollarSymbol from '../../components/bitcoinDollarSymbol/BitcoinDollarSymbol';
-import { HeroCard } from '../../components/heroCard/HeroCard';
-import { Card } from '../../components/card/Card';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import { heroCardInfo } from './heroCardInfo';
-import { homeCardInfo } from './homeCardInfo';
-import { Hero } from '../../components/hero/Hero';
+import ProtocolBento from '../../components/protocolBento/ProtocolBento';
+import { TrustBar } from '../../components/trustBar/TrustBar';
+import {
+    child,
+    containerVariants,
+    itemVariants,
+    sectionFadeIn,
+    slideInLeft,
+    slideInRight,
+    slideInRightDelay,
+    slideInTop,
+    slideInTopDelay
+} from "../../animationVariants/SlideVariants";
+import { Vault } from '../../components/svg/Vault';
+import { liquidationInfo } from './liquidationInfo';
 /**
  * Home page of the Bitcoin Dollar Protocol app.
  * Displays the hero section with protocol info and a grid of core features.
  */
+const cardColors = [
+    'linear-gradient(135deg, #f1f5f9, #dce6f5)',
+    'linear-gradient(135deg, #dce6f5, #f1f5f9)',
+    'linear-gradient(135deg, #f1f5f9, #dce6f5)',
+];
+
 export const Home: React.FC = () => {
+    const navigate = useNavigate();
+    const handleClick = (path: string) => {
+        navigate(`/${path}`);
+    }
+
     return (
         <div className={styles.container}>
-            <Hero>
-                <div className={styles.logoSymbol}>
-                    <h1 className="title">Bitcoin Dollar Protocol</h1>
-                    <span className={styles.symbolContainer}><BitcoinDollarSymbol width={50} /></span>
-                </div>
-                <p className={styles.subtitle}>
-                    A decentralized stablecoin backed by Bitcoin collateral
-                </p>
-                <div className={styles.stats}>
-                    {heroCardInfo.map((stat, index) => (
-                        <HeroCard key={index} value={stat.value} label={stat.label} />
-                    ))}
-                </div>
-            </Hero>
-            <section>
-                <h2 className={styles.featuresTitle}>Core Features</h2>
-                <div className="gridContainer">
-                    <div className="grid">
-                        {homeCardInfo.map((feature, index) => (
-                            <Card key={index}>
-                                <div className={styles.icon}>{feature.icon}</div>
-                                <h3 className={styles.title}>{feature.title}</h3>
-                                <p className={styles.description}>{feature.description}</p>
-                            </Card>
-                        ))}
-
+            <section className={`${styles.section} ${styles.hero}`}>
+                <div className={styles.heroContent}>
+                    <div className={styles.heroContentLeftContainer}>
+                        <motion.h1
+                            variants={slideInLeft}
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            <motion.span variants={child}>Deposit & Borrow<br /></motion.span>
+                            <motion.span variants={child}>with your<br /></motion.span>
+                            <motion.span variants={child}>Bitcoin</motion.span>
+                        </motion.h1>
+                        <motion.p
+                            variants={slideInTopDelay}
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            <motion.span variants={child}>Use your wBTC as collateral to borrow BTCd,<br /></motion.span>
+                            <motion.span variants={child}>easily swap BTCd for USDC with ease.<br /></motion.span>
+                            <motion.span variants={child}><a
+                                className={styles.learnMore}
+                            >Learn about BTCd!</a></motion.span>
+                        </motion.p>
                     </div>
+                    <motion.div
+                        className={styles.heroContentRightContainer}
+                        variants={slideInTop}
+                        initial='hidden'
+                        animate='visible'
+                    >
+                        <ProtocolBento />
+                    </motion.div>
                 </div>
             </section>
-        </div>
+            <section className={`${styles.section} ${styles.depositSection}`}>
+                <div
+                    className={styles.depositHeader}
+                >
+                    <motion.h2
+                        className={styles.depositTitle}
+                        variants={sectionFadeIn}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ amount: 0.2, once: true }}
+                    >
+                        Unlock Oppurtunities
+                    </motion.h2>
+                </div>
+                <div
+                    className={styles.depositGrid}
+                >
+                    <div className={styles.depositLeft}>
+                        <Vault />
+                    </div>
+                    <motion.div
+                        className={`${styles.depositRight}`}
+                        variants={sectionFadeIn}
+                        initial={"hidden"}
+                        whileInView={"visible"}
+                        viewport={{ amount: 0.2, once: true }}
+                    >
+                        <motion.h3
+                            variants={slideInRight}
+                            initial={"hidden"}
+                            whileInView={"visible"}
+                            viewport={{ once: true }}
+                        >
+                            Store Bitcoin Securely. No Middlemen.
+                        </motion.h3>
+                        <motion.p
+                            variants={slideInRightDelay}
+                            initial={"hidden"}
+                            whileInView={"visible"}
+                            viewport={{ once: true }}
+                        >
+
+                            Deposit your Bitcoin into the protocol with full confidence.
+                            Your assets are held securely in audited smart contracts, with no intermediaries and complete transparency.
+                        </motion.p>
+                        <motion.button
+                            onClick={() => handleClick('collateral')}
+                        >Deposit
+                        </motion.button>
+                    </motion.div>
+                </div>
+            </section >
+            <section className={`${styles.section} ${styles.liquidationSection}`}>
+                <div className={styles.liquidationLeft}>
+                    <motion.h2>
+                        Take part in the action,<br />
+                        get paid to liquidate
+                    </motion.h2>
+                    <motion.p>
+                        Mint Bitcoin Dollars and Liquidate bad positions for a bonus
+                    </motion.p>
+                    <div className={styles.liquidationButtonContainer}>
+                        <motion.button
+                            onClick={() => handleClick('liquidation')}
+                        >View Liquidations
+                        </motion.button>
+                    </div>
+                </div>
+                <motion.div
+                    className={styles.liquidationRight}
+                    variants={containerVariants}
+                    initial={"hidden"}
+                    whileInView={"visible"}
+                    viewport={{ amount: 0.6, once: true }}
+                >
+                    {liquidationInfo.map((feature, index) => (
+                        <motion.div
+                            key={index}
+                            className={styles.liquidationItem}
+                            variants={itemVariants}
+                            style={{ background: cardColors[index % cardColors.length] }}
+                        >
+                            <div
+                                className={styles.liquidationContent}
+                            >
+                                <div>
+                                    <h3 className={styles.liquidationTitle}>{feature.title}</h3>
+                                    <p className={styles.liquidationDescription}>{feature.description}</p>
+                                </div>
+                                <div className={styles.liquidationIcon}>{feature.icon}</div>
+
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+            </section >
+        </div >
     );
 };
 
+
+{/* <motion.div
+                    className={styles.featuresList}
+                    variants={staggerContainer}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.3 }}
+                >
+                    {homeCardInfo.map((feature, index) => (
+                        <motion.div
+                            key={index}
+                            className={styles.featureItem}
+                            variants={fadeInUp}
+                        >
+                            <div className={styles.featureIcon}>{feature.icon}</div>
+                            <div className={styles.featureContent}>
+                                <h3 className={styles.featureTitle}>{feature.title}</h3>
+                                <p className={styles.featureDescription}>{feature.description}</p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div> */}

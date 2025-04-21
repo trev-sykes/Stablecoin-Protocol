@@ -23,34 +23,34 @@ const LiquidationPopup: React.FC<LiquidationPopupProps> = ({
     if (!isOpen || !liquidationData) return null;
 
     return (
-        <div className={styles.backdrop}>
-            <div className={styles.modal}>
-                <button onClick={onClose} className={styles.closeButton}>
-                    <X size={20} />
-                </button>
-                <h2 className={styles.title}>💥 Liquidation Event</h2>
-                <div className={styles.details}>
-                    <p>
-                        <strong>Liquidated User:</strong> {liquidationData.user}
-                    </p>
-                    <p>
-                        <strong>Liquidator:</strong> {liquidationData.liquidator}
-                    </p>
-                    <p>
-                        <strong>Debt Repaid:</strong>{" "}
-                        {parseFloat(liquidationData.debtRepaid) / 1e18} BTC$
-                    </p>
-                    <p>
-                        <strong>Collateral Seized:</strong>{" "}
-                        {parseFloat(liquidationData.collateralSeized) / 1e8} WBTC
-                    </p>
-                    <p>
-                        <strong>Bonus:</strong>{" "}
-                        {parseFloat(liquidationData.liquidationBonus) / 1e18} BTC$
-                    </p>
-                </div>
+        <div className={styles.liquidationPopupContainer}>
+            <X
+                onClick={onClose}
+                size={20} />
+            <h2 className={styles.title}>💥 Liquidation Event</h2>
+
+            <div className={styles.details}>
+                <p>
+                    <strong>Liquidated User:</strong> {liquidationData.user}
+                </p>
+
+                <p>
+                    <strong>Liquidator:</strong> {liquidationData.liquidator}
+                </p>
+                <p>
+                    <strong>Debt Repaid:</strong>{" "}
+                    {(parseFloat(liquidationData.debtRepaid) / 1e18).toFixed(2)} Bitcoin Dollars
+                </p>
+                <p>
+                    <strong>Collateral Seized:</strong>{" "}
+                    {(parseFloat(liquidationData.collateralSeized) / 1e18).toFixed(4)} WBTC
+                </p>
+                <p>
+                    <strong>Bonus:</strong>{" "}
+                    {(parseFloat(liquidationData.liquidationBonus) / 1e18).toFixed(2)} Bitcoin Dollars
+                </p>
             </div>
-        </div>
+        </div >
     );
 };
 
@@ -64,38 +64,42 @@ export const LiquidationForm: React.FC<LiquidationFormProps> = ({ onClose }) => 
 
     return (
         <div className={styles.container}>
-            <X onClick={onClose} className={styles.headerClose} />
-            <h1 className={styles.heading}>Liquidations</h1>
+            <div className={styles.leftContainer}>
+                <X onClick={onClose} className={styles.headerClose} />
+                <h1 className={styles.heading}>Liquidations</h1>
 
-            {pastLiquidations && (
-                <div className={styles.list}>
-                    {pastLiquidations.map((liq: any, index: number) => (
-                        <div
-                            key={index}
-                            className={styles.item}
-                            onClick={() =>
-                                setSelected({
-                                    user: liq.args[0],
-                                    liquidator: liq.args[1],
-                                    debtRepaid: liq.args[2],
-                                    collateralSeized: liq.args[3],
-                                    liquidationBonus: liq.args[4],
-                                })
-                            }
-                        >
-                            <p className={styles.itemText}>
-                                #{index + 1} — {liq.args[0]}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            )}
+                {pastLiquidations && (
+                    <div className={styles.list}>
+                        {pastLiquidations.map((liq: any, index: number) => (
+                            <div
+                                key={index}
+                                className={styles.item}
+                                onClick={() =>
+                                    setSelected({
+                                        user: liq.args[0],
+                                        liquidator: liq.args[1],
+                                        debtRepaid: liq.args[2],
+                                        collateralSeized: liq.args[3],
+                                        liquidationBonus: liq.args[4],
+                                    })
+                                }
+                            >
+                                <p className={styles.itemText}>
+                                    {index + 1} — {liq.args[0]}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+            <div className={styles.rightContainer}>
 
-            <LiquidationPopup
-                isOpen={!!selected}
-                onClose={() => setSelected(null)}
-                liquidationData={selected}
-            />
+                <LiquidationPopup
+                    isOpen={!!selected}
+                    onClose={() => setSelected(null)}
+                    liquidationData={selected}
+                />
+            </div>
         </div>
     );
 };

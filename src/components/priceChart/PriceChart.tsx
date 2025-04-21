@@ -16,6 +16,7 @@ import {
     Legend,
     Filler
 } from "chart.js";
+import { AnimatePresence, motion } from 'framer-motion';
 
 ChartJS.register(
     CategoryScale,
@@ -116,23 +117,30 @@ export const PriceChart: React.FC<PriceChartProps> = ({
     if (!chartData) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.chartHeader}>
-                <span className={styles.chartTitle}>
-                    <span className={styles.offChain}>off-chain </span>
-                    Bitcoin Price
-                    <span className={styles.offChainDays}> (30 days)</span>
-                </span>
-                <span className={styles.currentPrice}>
-                    ${historicalData?.[historicalData.length - 1]?.price.toLocaleString().split('.')[0]}
-                </span>
-            </div>
-            <Line
-                data={chartData}
-                options={{ ...defaultChartOptions, ...customOptions }}
-                height={height}
-            />
-
-        </div>
+        <AnimatePresence mode="wait">
+            <motion.div
+                className={styles.container}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+            >
+                <div className={styles.chartHeader}>
+                    <span className={styles.chartTitle}>
+                        <span className={styles.offChain}>off-chain </span>
+                        Bitcoin Price
+                        <span className={styles.offChainDays}> (30 days)</span>
+                    </span>
+                    <span className={styles.currentPrice}>
+                        ${historicalData?.[historicalData.length - 1]?.price.toLocaleString().split('.')[0]}
+                    </span>
+                </div>
+                <Line
+                    data={chartData}
+                    options={{ ...defaultChartOptions, ...customOptions }}
+                    height={height}
+                />
+            </motion.div>
+        </AnimatePresence>
     );
 };

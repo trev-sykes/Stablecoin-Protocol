@@ -1,0 +1,250 @@
+.healthCard {
+    min-width: 800px;
+    min-height: 350px;
+    grid-column: 1 / -1;
+    background: var(--color-neutral-100);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    color: var(--color-neutral-900);
+    border: 1px solid var(--color-neutral-100);
+}
+
+.toastContainer {
+    position: absolute;
+    top: 100%;
+    width: 300px;
+    user-select: none;
+    cursor: pointer;
+    z-index: 100000;
+
+}
+
+.toastContent {
+    max-width: 250px;
+    padding: 15px;
+    transform: translateX(-25px);
+    background: var(--color-neutral-900);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-neutral-100);
+    box-shadow: var(--box-shadow);
+}
+
+.toastContent p {
+    font-size: 0.85rem;
+    font-family: var(--font-title);
+    color: var(--color-neutral-100);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.blockies {
+    border-radius: 50%;
+    width: 10px;
+}
+
+.spanAddress {
+    font-size: 1.25rem;
+}
+
+.healthCard h3 {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: var(--color-neutral-900);
+}
+
+.infoIcon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--color-neutral-300);
+    color: var(--color-neutral-700);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.healthStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 0.85rem;
+}
+
+.healthStatus .ratio {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
+}
+
+.safe {
+    color: #00ffc2;
+}
+
+.healthy {
+    color: #00d9ff;
+}
+
+.minimum {
+    color: #ffbb00;
+}
+
+.warning {
+    color: #ff5588;
+}
+
+.healthBars {
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.barRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+
+.barLabel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.barLabel span {
+    font-size: 1.125rem;
+    color: var(--color-neutral-800);
+}
+
+.value {
+    font-weight: bold;
+    color: var(--color-neutral-700);
+}
+
+.barContainer {
+    position: relative;
+    width: 100%;
+}
+
+.bar {
+    width: 100%;
+    height: 1.65rem;
+    background: var(--color-neutral-200);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--color-neutral-400);
+}
+
+.collateralFill {
+    background: linear-gradient(90deg, var(--color-accent-2), var(--color-accent-3));
+    height: 100%;
+    transition: width 0.4s ease;
+}
+
+.borrowFill {
+    background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+    height: 100%;
+    transition: width 0.4s ease;
+}
+
+.maxValue {
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--color-neutral-700);
+    margin-top: 0.25rem;
+}
+
+.markers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.marker {
+    position: absolute;
+    height: 24px;
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.4);
+    top: -4px;
+    transform: translateX(-1px);
+}
+
+.dangerMarker {
+    background-color: var(--color-danger);
+}
+
+.warningMarker {
+    background-color: var(--color-warning);
+    position: relative;
+}
+
+.tooltipMarker {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.warningMarker:hover .tooltipMarker {
+    opacity: 1;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.safeDot {
+    background-color: var(--color-healthy);
+}
+
+.healthyDot {
+    background-color: #00d9ff;
+}
+
+.minimumDot {
+    background-color: var(--color-danger)
+}
+
+.warningDot {
+    background-color: var(--color-warning);
+}
+
+.userAddressContainer span {
+    text-decoration: none;
+}

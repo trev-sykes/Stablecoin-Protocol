@@ -38,6 +38,7 @@ function App() {
     initializeProvider,
     jsonRpcProvider,
     readContract,
+    fetchUsersFromEvents
   } = useWeb3Store();
 
   const { prices, fetchPrices } = useCoinGeckoStore();
@@ -95,6 +96,11 @@ function App() {
       fetchPrices();
     }
   }, [fetchPrices, prices]);
+
+  useEffect(() => {
+    if (!readContract) return;
+    fetchUsersFromEvents();
+  }, [readContract]);
   return (
     <Router>
       {/* 

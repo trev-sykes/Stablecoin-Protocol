@@ -1,6 +1,7 @@
 :root {
   /* Typography */
   --font-family: 'Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', sans-serif;
+  --font-title: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   --line-height: 1.5;
   --font-weight: 400;
   --font-synthesis: none;
@@ -71,6 +72,7 @@
   /* Accent Colors (optional) */
   --color-accent-1: #009bbd;
   --color-accent-2: #00acd2;
+  --color-accent-3: #00b9e3;
   --color-overlay: #00000059;
   --color-healthy: #22c55e;
   --color-warning: #facc15;
@@ -135,6 +137,7 @@ body {
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
 }
+
 
 .grid {
   display: grid;
@@ -208,4 +211,48 @@ body {
 
 .icon:active {
   transform: scale(0.95);
+}
+
+.hero-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-animation svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.draw {
+  stroke-dasharray: 5000;
+  stroke-dashoffset: 5000;
+  animation: drawLine 2s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.wiggle {
+  animation: wiggleMove 4s ease-in-out infinite alternate;
+}
+
+@keyframes wiggleMove {
+  0% {
+    transform: translate(0px, 0px);
+  }
+
+  100% {
+    transform: translate(1px, -1px);
+  }
 }

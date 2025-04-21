@@ -28,7 +28,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ activeSection, inputTy
     return (
         <div className={`${styles.container} ${activeSection === 'deposit' ? 'active' : ''}`}>
             <div className={styles.inputGroup}>
-                <label htmlFor={activeSection}>Enter Amount</label>
+                <label className={styles.label} htmlFor={activeSection}>Enter Amount</label>
                 <input
                     disabled={!transactionSigner}
                     id={activeSection}

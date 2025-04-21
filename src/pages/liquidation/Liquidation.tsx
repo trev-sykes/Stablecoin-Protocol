@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
-import { Hero } from "../../components/hero/Hero";
 import styles from "./Liquidation.module.css";
 import useWeb3Store, { UserState } from "../../store/useWeb3Store";
 import { useProtocol } from "../../hooks/useProtocol";
 import Blockies from "react-blockies";
 import useAlertStore from "../../store/useAlertStore";
-import { UserCard } from "../../components/userCard/UserCard";
 import { Eye, Droplet } from "lucide-react";
 import { LiquidationForm } from "../../components/liquidationForm/LiquidationForm";
+import { Link } from "react-router-dom";
+import { User } from "../../components/user/User";
+import { AnimatePresence, motion } from "framer-motion";
 
-/**
- * Liquidation Component
- *
- * Displays the list of users who can and cannot be liquidated based on the protocol's rules.
- * - Liquidatable users are those who are eligible for liquidation.
- * - Non-liquidatable users are those who are not eligible for liquidation.
- */
+const listVariants = {
+    animate: {
+        transition: {
+            staggerChildren: 0.05,
+        },
+    },
+};
+
+const itemVariants = {
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -8 },
+};
+
 export const Liquidation: React.FC = () => {
     const [liquidationPage, setLiquidationPage] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -35,40 +43,20 @@ export const Liquidation: React.FC = () => {
     } = useProtocol();
 
     useEffect(() => {
-        if (!readContract) {
-            console.log("Contract not initialized");
-            return;
-        };
-        if (users && users.all && users.all != null) {
-            console.log("Users are already grabbed");
-            return;
-        }
+        if (!readContract || users?.all) return;
         fetchUsersFromEvents();
     }, [readContract]);
 
     useEffect(() => {
-        if (selectedUser) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "auto";
-        }
-        return () => {
-            document.body.style.overflow = "auto";
-        };
+        document.body.style.overflow = selectedUser ? "hidden" : "auto";
+        return () => { document.body.style.overflow = "auto"; };
     }, [selectedUser]);
+
     useEffect(() => {
-        if (!readContract) {
-            console.log("Contract not initialized");
-            return;
-        };
-        if (users && users.nonLiquidatable && users.nonLiquidatable != null) {
-            console.log("Liquidatable users are already grabbed");
-            return;
-        }
+        if (!readContract || users?.nonLiquidatable) return;
         const timeout = setTimeout(() => {
             fetchLiquidatableUsers();
         }, 2000);
-        console.log("Gabbed liquidation users");
         return () => clearTimeout(timeout);
     }, [readContract]);
 
@@ -77,12 +65,9 @@ export const Liquidation: React.FC = () => {
             showAlert('Please Sign In', 'failure');
             return;
         }
-        for (let i = 0; i < users.liquidatable.length; i++) {
-            if (transactionSigner.address == users.liquidatable[i]) {
-                showAlert('You Face Liquidation Yourself Or Insufficient Funds To Cover Liquidation',
-                    'failure');
-                return;
-            }
+        if (users.liquidatable.includes(transactionSigner.address)) {
+            showAlert('You Face Liquidation Yourself Or Insufficient Funds To Cover Liquidation', 'failure');
+            return;
         }
         try {
             showAlert('Liquidation Started', 'started');
@@ -99,8 +84,8 @@ export const Liquidation: React.FC = () => {
     const userInformation = async (user: string) => {
         try {
             const userInfo = await handleGetUserInformation(user);
-            setSelectedUser(user); // set the selected user's address
-            setSelectedUserState(userInfo); // and their data
+            setSelectedUser(user);
+            setSelectedUserState(userInfo);
         } catch (err: any) {
             showAlert('Error Grabbing User', 'error');
         }
@@ -108,111 +93,142 @@ export const Liquidation: React.FC = () => {
 
     const handleLiquidationForm = () => {
         setLiquidationPage(prev => !prev);
-    }
+    };
+
     return (
-        <div className={styles.container}>
-            <Hero>
-                <h1 className="title">Liquidation</h1>
-            </Hero>
+        <AnimatePresence mode="wait">
+            <motion.div
+                className={`${styles.container} ${selectedUser ? styles.userCardActive : ''}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+            >
+                {selectedUser && selectedUserState && (
+                    <div className={styles.userCardWrapper}>
+                        <User
+                            userState={selectedUserState}
+                            userAddress={selectedUser}
+                            onClose={() => {
+                                setSelectedUser(null);
+                                setSelectedUserState(undefined);
+                            }}
+                        />
+                    </div>
+                )}
 
-            <div>
-                <button
-                    onClick={handleLiquidationForm}
-                >View All Liquidations</button>
-            </div>
-            {!loading.fetchPastLiquidations ? (
-                <div className={styles.userList}>
-                    {/* Liquidatable Users Section */}
-                    <div className={styles.liquidatableSection}>
-                        <h2 className={styles.sectionTitle}>Liquidatable Users</h2>
-                        {users && users.liquidatable && users.liquidatable.length === 0 && (
-                            <p>No liquidatable users at the moment.</p> // Show message if no liquidatable users
-                        )}{users && users.liquidatable && users.liquidatable?.length > 0 && (
-                            users.liquidatable.map((user, index) => (
-                                <div key={index} className={styles.userItem}>
-                                    {/* Display user's avatar and truncated address */}
-                                    <div className={styles.userAddressContainer}>
-                                        <Blockies
-                                            seed={user}
-                                            size={15}
-                                            scale={2}
-                                            className={styles.blockieAvatar}
-                                        />
-                                        <span>0x{user.slice(user.length - 4)}</span>
-                                    </div>
-                                    <span>
-                                        <Droplet
-                                            onClick={async () => await liquidate(user)}
-                                            className="icon"
-                                        />
-                                    </span>
+                <div>
+                    <Link to={'/liquidation/'} />
+                </div>
 
-                                </div>
-                            ))
-                        )}
-                    </div>
+                {!loading.fetchPastLiquidations && !liquidationPage && !selectedUser && !selectedUserState && (
+                    <>
+                        <motion.div
+                            className={styles.userList}
+                            variants={listVariants}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                        >
+                            <AnimatePresence>
+                                {users?.liquidatable && (
+                                    <motion.div
+                                        key="liquidatable-users"
+                                        className={styles.liquidatableSection}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <h2 className={styles.sectionTitle}>Liquidatable Users</h2>
+                                        {users.liquidatable.length === 0 ? (
+                                            <p>No liquidatable users at the moment.</p>
+                                        ) : (
+                                            users.liquidatable.map((user, index) => (
+                                                <motion.div key={index} className={styles.userItem} variants={itemVariants}>
+                                                    <div className={styles.userAddressContainer}>
+                                                        <Blockies seed={user} size={15} scale={2} className={styles.blockieAvatar} />
+                                                        <span>0x{user.slice(user.length - 4)}</span>
+                                                    </div>
+                                                    <span>
+                                                        <Droplet
+                                                            onClick={async () => await liquidate(user)}
+                                                            className="icon"
+                                                        />
+                                                    </span>
+                                                </motion.div>
+                                            ))
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
-                    {/* Non-Liquidatable Users Section */}
-                    <div className={styles.nonLiquidatableSection}>
-                        <h2 className={styles.sectionTitle}>Non-Liquidatable Users</h2>
-                        {users && users.nonLiquidatable && users.nonLiquidatable.length === 0 && (
-                            <p>No non-liquidatable users at the moment.</p> // Show message if no non-liquidatable users
-                        )} {users && users.nonLiquidatable && users.nonLiquidatable.length > 0 && (
-                            users.nonLiquidatable.map((user, index) => (
-                                <div key={index} className={styles.userItem}>
-                                    {/* Display user's avatar and truncated address */}
-                                    <div className={styles.userAddressContainer}>
-                                        <Blockies
-                                            seed={user}
-                                            size={15}
-                                            scale={2}
-                                            className={styles.blockieAvatar}
-                                        />
-                                        <span className={styles.userAddress}>0x{user.slice(user.length - 4)}</span>
-                                    </div>
-                                    <div>
-                                        <Eye
-                                            className="icon"
-                                            onClick={async () => {
-                                                await userInformation(user);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>) : (
-                <>
-                </>
-            )}
-            {
-                selectedUser && selectedUserState && (
-                    <div className={styles.userModalOverlay}>
-                        <div className={styles.userModalContent}>
-                            <UserCard
-                                user={selectedUserState}
-                                userAddress={selectedUser}
-                                onclose={() => {
-                                    setSelectedUser(null);
-                                    setSelectedUserState(undefined);
-                                }}
-                            />
-                        </div>
-                    </div>
-                )
-            }
-            {
-                liquidationPage && (
-                    <div className={styles.userModalOverlay}>
-                        <div className={styles.userModalContent}>
-                            <LiquidationForm
-                                onClose={handleLiquidationForm}
-                            />
-                        </div>
-                    </div>
-                )
-            }
-        </div >
+                            <AnimatePresence>
+                                {users?.nonLiquidatable && (
+                                    <motion.div
+                                        key="non-liquidatable-users"
+                                        className={styles.nonLiquidatableSection}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <h2 className={styles.sectionTitle}>Non-Liquidatable Users</h2>
+                                        {users.nonLiquidatable.length === 0 ? (
+                                            <p>No non-liquidatable users at the moment.</p>
+                                        ) : (
+                                            users.nonLiquidatable.map((user, index) => (
+                                                <motion.div key={index} className={styles.userItem} variants={itemVariants}>
+                                                    <div className={styles.userAddressContainer}>
+                                                        <Blockies seed={user} size={15} scale={2} className={styles.blockieAvatar} />
+                                                        <span className={styles.userAddress}>0x{user.slice(user.length - 4)}</span>
+                                                    </div>
+                                                    <div>
+                                                        <Eye
+                                                            className="icon"
+                                                            onClick={async () => {
+                                                                await userInformation(user);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </motion.div>
+                                            ))
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <button
+                                className={styles.liquidationButton}
+                                onClick={handleLiquidationForm}
+                            >
+                                View All Liquidations
+                            </button>
+                        </motion.div>
+                    </>
+                )}
+
+                <AnimatePresence>
+                    {liquidationPage && (
+                        <motion.div
+                            key="liquidation-form"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <LiquidationForm onClose={handleLiquidationForm} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+        </AnimatePresence>
     );
 };
