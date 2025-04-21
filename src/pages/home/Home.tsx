@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import ProtocolBento from '../../components/protocolBento/ProtocolBento';
-import { TrustBar } from '../../components/trustBar/TrustBar';
 import {
     child,
     containerVariants,

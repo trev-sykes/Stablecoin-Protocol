@@ -1,4 +1,3 @@
-import { delay } from "framer-motion";
 
 export const lineVariant = {
     hidden: { x: -50 },
