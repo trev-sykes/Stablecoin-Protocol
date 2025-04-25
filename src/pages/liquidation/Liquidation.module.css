@@ -1,15 +1,22 @@
 /* Main container for the liquidation page */
 .container {
     width: 100%;
-    padding: 2rem 1rem;
+    min-height: 100vh;
+
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: var(--space-xl);
 }
 
 /* Flexbox for the user list to be responsive and adaptable */
 .userList {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     /* Allows wrapping when screen size is smaller */
-    justify-content: space-between;
+    justify-content: center;
     gap: var(--space-md);
 }
 
@@ -21,18 +28,9 @@
 /* Liquidatable and Non-liquidatable sections */
 .liquidatableSection,
 .nonLiquidatableSection {
-    width: 48%;
-    background-color: var(--color-neutral-200);
-    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 1100px;
     padding: var(--space-lg);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
-}
-
-/* Hover effect for the sections */
-.liquidatableSection:hover,
-.nonLiquidatableSection:hover {
-    background-color: var(--color-neutral-300);
 }
 
 /* User item layout in the sections */
@@ -45,7 +43,9 @@
     border-bottom: 1px solid var(--color-neutral-400);
     font-size: 1.1rem;
     gap: var(--space-xs);
+    cursor: pointer;
 }
+
 
 /* Last child of user item (no bottom border) */
 .userItem:last-child {
@@ -73,13 +73,13 @@
 /* Liquidation sections */
 .liquidatableSection h2,
 .nonLiquidatableSection h2 {
-    color: var(--color-liquidation);
+    color: var(--color-neutral-900);
     font-family: var(--font-title);
     /* Green for liquidatable users */
 }
 
 .nonLiquidatableSection h2 {
-    color: var(--color-healthy);
+    color: var(--color-neutral-900);
     font-family: var(--font-title);
     /* Red for non-liquidatable users */
 }

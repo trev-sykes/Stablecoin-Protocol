@@ -9,6 +9,7 @@
     overflow: hidden;
     box-shadow: var(--box-shadow);
     backdrop-filter: blur(12px);
+    z-index: 1;
 }
 
 .content {
@@ -19,6 +20,7 @@
     justify-self: start;
     /* Align to the left */
     margin-top: 0.5rem;
+    z-index: 1;
 }
 
 .cardItem {

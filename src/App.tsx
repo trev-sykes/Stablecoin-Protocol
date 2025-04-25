@@ -6,8 +6,6 @@ import { Navigation } from "./components/navigation/Navigation";
 import { Home } from './pages/home/Home';
 import { Portfolio } from './pages/portfolio/Portfolio';
 import { Protocol } from './pages/protocol/Protocol';
-import { Collateral } from './pages/collateral/Collateral';
-import { Borrow } from './pages/borrow/Borrow';
 import { Liquidation } from './pages/liquidation/Liquidation';
 import { useWindowWidth } from './hooks/useWindowWidth';
 import { Alert } from './components/alert/Alert';
@@ -17,6 +15,8 @@ import useWeb3Store from './store/useWeb3Store';
 import { useProtocol } from './hooks/useProtocol';
 import useAlertStore from './store/useAlertStore';
 import useCoinGeckoStore from './store/useCoinGeckoStore';
+import ScrollToTop from './components/scrollToTop/ScrollToTop';
+import { Position } from './pages/position/Position';
 
 /**
  * The main App component that handles routing, internet connection status,
@@ -110,6 +110,7 @@ function App() {
        */}
       {windowWidth > 900 ? (
         <div className="container">
+          <ScrollToTop />
           <Alert />
           <div className="navigation">
             <Navigation />
@@ -120,8 +121,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/protocol" element={<Protocol />} />
-                <Route path="/collateral" element={<Collateral />} />
-                <Route path="/borrowing" element={<Borrow />} />
+                <Route path="/position" element={<Position />} />
                 <Route path="/liquidation" element={<Liquidation />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>

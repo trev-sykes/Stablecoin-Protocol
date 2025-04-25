@@ -6,28 +6,17 @@ import Blockies from "react-blockies";
 import useAlertStore from "../../store/useAlertStore";
 import { Eye, Droplet } from "lucide-react";
 import { LiquidationForm } from "../../components/liquidationForm/LiquidationForm";
-import { Link } from "react-router-dom";
+import { itemVariants } from "../../animationVariants/SlideVariants";
+import { listVariants } from "../../animationVariants/listVariants";
 import { User } from "../../components/user/User";
 import { AnimatePresence, motion } from "framer-motion";
+import { HorizontalNavigation } from "../../components/liquidationHorizontalNavigation/HorizontalNavigaition";
 
-const listVariants = {
-    animate: {
-        transition: {
-            staggerChildren: 0.05,
-        },
-    },
-};
-
-const itemVariants = {
-    initial: { opacity: 0, y: 8 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -8 },
-};
 
 export const Liquidation: React.FC = () => {
-    const [liquidationPage, setLiquidationPage] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
     const [selectedUserState, setSelectedUserState] = useState<UserState | undefined>(undefined);
+    const [activeSection, setActiveSection] = useState('non-liquidatable');
     const { showAlert } = useAlertStore();
     const {
         loading,
@@ -56,9 +45,9 @@ export const Liquidation: React.FC = () => {
         if (!readContract || users?.nonLiquidatable) return;
         const timeout = setTimeout(() => {
             fetchLiquidatableUsers();
-        }, 2000);
+        }, 150);
         return () => clearTimeout(timeout);
-    }, [readContract]);
+    }, [readContract, users]);
 
     const liquidate = async (user: string) => {
         if (!transactionSigner || !users?.liquidatable) {
@@ -79,11 +68,24 @@ export const Liquidation: React.FC = () => {
             showAlert('Error Liquidating', 'error');
             throw new Error(err.message);
         }
-    }
+    };
+    const handleActiveSection = (sectionName: string) => {
+        if (activeSection == 'user' && selectedUser && selectedUserState) {
+            setSelectedUser(null);
+            setSelectedUserState(undefined);
+            setActiveSection(sectionName);
+            console.log("User Erased");
+            console.log("Section Changed");
+        } else {
+            setActiveSection(sectionName);
+            console.log("Section Changed");
+        }
 
+    }
     const userInformation = async (user: string) => {
         try {
             const userInfo = await handleGetUserInformation(user);
+            setActiveSection('user');
             setSelectedUser(user);
             setSelectedUserState(userInfo);
         } catch (err: any) {
@@ -91,47 +93,54 @@ export const Liquidation: React.FC = () => {
         }
     };
 
-    const handleLiquidationForm = () => {
-        setLiquidationPage(prev => !prev);
-    };
-
     return (
         <AnimatePresence mode="wait">
+            <HorizontalNavigation
+                activeSection={activeSection}
+                handleSectionSelect={handleActiveSection}
+            />
+
             <motion.div
-                className={`${styles.container} ${selectedUser ? styles.userCardActive : ''}`}
+                className={`${styles.container}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
             >
-                {selectedUser && selectedUserState && (
+                {selectedUser && selectedUserState && activeSection == 'user' && (
                     <div className={styles.userCardWrapper}>
                         <User
                             userState={selectedUserState}
                             userAddress={selectedUser}
-                            onClose={() => {
-                                setSelectedUser(null);
-                                setSelectedUserState(undefined);
-                            }}
+                            onClose={handleActiveSection}
                         />
                     </div>
                 )}
 
-                <div>
-                    <Link to={'/liquidation/'} />
-                </div>
 
-                {!loading.fetchPastLiquidations && !liquidationPage && !selectedUser && !selectedUserState && (
-                    <>
-                        <motion.div
-                            className={styles.userList}
-                            variants={listVariants}
-                            initial="initial"
-                            animate="animate"
-                            exit="exit"
-                        >
-                            <AnimatePresence>
-                                {users?.liquidatable && (
+                <AnimatePresence mode="wait">
+                    {!selectedUser && !selectedUserState && (
+                        loading.fetchPastLiquidations ? (
+                            <motion.div
+                                key="loading"
+                                className={styles.loadingContainer}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <p>Loading users...</p>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key={`user-lists-${activeSection}`}
+                                className={styles.userList}
+                                variants={listVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                            >
+                                {activeSection === 'liquidatable' && (
                                     <motion.div
                                         key="liquidatable-users"
                                         className={styles.liquidatableSection}
@@ -141,18 +150,24 @@ export const Liquidation: React.FC = () => {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <h2 className={styles.sectionTitle}>Liquidatable Users</h2>
-                                        {users.liquidatable.length === 0 ? (
+                                        {!users || !users.liquidatable || users?.liquidatable?.length === 0 ? (
                                             <p>No liquidatable users at the moment.</p>
                                         ) : (
                                             users.liquidatable.map((user, index) => (
-                                                <motion.div key={index} className={styles.userItem} variants={itemVariants}>
+                                                <motion.div
+                                                    key={index}
+                                                    className={styles.userItem}
+                                                    variants={itemVariants}
+                                                    whileHover={{ scale: 1.01 }}
+                                                    whileTap={{ scale: 0.99 }}
+                                                    onClick={async () => await liquidate(user)}
+                                                >
                                                     <div className={styles.userAddressContainer}>
                                                         <Blockies seed={user} size={15} scale={2} className={styles.blockieAvatar} />
                                                         <span>0x{user.slice(user.length - 4)}</span>
                                                     </div>
                                                     <span>
                                                         <Droplet
-                                                            onClick={async () => await liquidate(user)}
                                                             className="icon"
                                                         />
                                                     </span>
@@ -161,24 +176,30 @@ export const Liquidation: React.FC = () => {
                                         )}
                                     </motion.div>
                                 )}
-                            </AnimatePresence>
 
-                            <AnimatePresence>
-                                {users?.nonLiquidatable && (
+                                {activeSection === 'non-liquidatable' && (
                                     <motion.div
                                         key="non-liquidatable-users"
                                         className={styles.nonLiquidatableSection}
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.3 }}
                                     >
                                         <h2 className={styles.sectionTitle}>Non-Liquidatable Users</h2>
-                                        {users.nonLiquidatable.length === 0 ? (
+                                        {!users || !users.nonLiquidatable || users?.nonLiquidatable?.length === 0 ? (
                                             <p>No non-liquidatable users at the moment.</p>
                                         ) : (
                                             users.nonLiquidatable.map((user, index) => (
-                                                <motion.div key={index} className={styles.userItem} variants={itemVariants}>
+                                                <motion.div
+                                                    key={index}
+                                                    className={styles.userItem}
+                                                    variants={itemVariants}
+                                                    whileHover={{ scale: 1.01 }}
+                                                    whileTap={{ scale: 0.99 }}
+                                                    onClick={async () => {
+                                                        await userInformation(user)
+                                                    }}
+                                                >
                                                     <div className={styles.userAddressContainer}>
                                                         <Blockies seed={user} size={15} scale={2} className={styles.blockieAvatar} />
                                                         <span className={styles.userAddress}>0x{user.slice(user.length - 4)}</span>
@@ -186,9 +207,6 @@ export const Liquidation: React.FC = () => {
                                                     <div>
                                                         <Eye
                                                             className="icon"
-                                                            onClick={async () => {
-                                                                await userInformation(user);
-                                                            }}
                                                         />
                                                     </div>
                                                 </motion.div>
@@ -196,39 +214,22 @@ export const Liquidation: React.FC = () => {
                                         )}
                                     </motion.div>
                                 )}
-                            </AnimatePresence>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <button
-                                className={styles.liquidationButton}
-                                onClick={handleLiquidationForm}
-                            >
-                                View All Liquidations
-                            </button>
-                        </motion.div>
-                    </>
-                )}
-
-                <AnimatePresence>
-                    {liquidationPage && (
-                        <motion.div
-                            key="liquidation-form"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <LiquidationForm onClose={handleLiquidationForm} />
-                        </motion.div>
+                                {activeSection == 'past-liquidations' && (
+                                    <motion.div
+                                        key="liquidation-form"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <LiquidationForm />
+                                    </motion.div>
+                                )}
+                            </motion.div>
+                        )
                     )}
                 </AnimatePresence>
-            </motion.div>
-        </AnimatePresence>
+            </motion.div >
+        </AnimatePresence >
     );
 };

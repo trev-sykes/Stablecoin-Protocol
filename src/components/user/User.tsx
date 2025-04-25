@@ -3,7 +3,7 @@ import styles from "./User.module.css";
 import { PositionBar } from "../positionBar/PositionBar";
 import { UserBento } from "../userBento/UserBento";
 import HealthGauge from "../healthGauge/HealthGauge";
-import { X } from "lucide-react";
+import { MoveLeftIcon } from "lucide-react";
 
 interface UserProps {
     userState: any;
@@ -14,7 +14,7 @@ export const User: React.FC<UserProps> = ({ userState, userAddress, onClose }) =
     return (
         <div className={styles.container}>
             {onClose && (
-                <X className={`icon ${styles.x}`} onClick={onClose} />
+                <MoveLeftIcon className={`icon ${styles.x}`} onClick={() => onClose('non-liquidatable')} />
             )}
             <AnimatePresence mode="wait">
                 {userState ? (

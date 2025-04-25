@@ -2,6 +2,7 @@
     .container {
         scroll-behavior: smooth;
         scroll-snap-type: y proximity;
+        z-index: 0;
     }
 
     .section {
@@ -117,6 +118,7 @@
         grid-template-columns: 1fr 1fr;
         height: 100vh;
         position: relative;
+        z-index: 1;
     }
 
     .depositLeft {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ConditionalLink from "../conditionalLink/ConditionalLink";
-import { House, Bitcoin, User, Plus, Flame, LogIn, Droplet } from "lucide-react";
+import { House, Bitcoin, User, Vault, LogIn, Droplet } from "lucide-react";
 import useWalletStore from "../../store/useWalletStore";
 import useWeb3Store from "../../store/useWeb3Store";
 import useInternetConnectionStore from "../../store/useInternetConnectionStore";
@@ -62,16 +62,9 @@ export const Navigation: React.FC = () => {
                     disabled={!isOnline}
                 />
                 <ConditionalLink
-                    to={"/collateral"}
+                    to={"/position"}
                     children={
-                        <Plus className={`${styles.menuItem}`} />
-                    }
-                    disabled={!isOnline}
-                />
-                <ConditionalLink
-                    to={"/borrowing"}
-                    children={
-                        <Flame className={`${styles.menuItem}`} />
+                        <Vault className={`${styles.menuItem}`} />
                     }
                     disabled={!isOnline}
                 />

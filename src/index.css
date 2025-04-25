@@ -80,7 +80,7 @@
   --color-liquidation: #ef4444;
   --color-notice: #ffd7001a;
   /* Component-specific */
-  --nav-background: var(--color-neutral-50);
+  --nav-background-color: linear-gradient(to right, var(--color-neutral-100), 60%, var(--color-neutral-200));
   --nav-text-color: var(--color-neutral-900);
   --button-hover: var(--color-primary-light);
 
@@ -104,6 +104,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden !important;
 }
 
 body {
@@ -150,13 +154,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
-  max-width: var(--card-max-width);
-  background-color: var(--color-neutral-100);
+  max-width: 600px;
+  min-height: 500px;
+  background-color: var(--color-neutral-300);
   border-radius: var(--border-radius);
   padding: var(--space-lg);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
   margin: 0 auto;
 }
@@ -200,17 +204,6 @@ body {
 .icon {
   color: var(--color-accent-1);
   cursor: pointer;
-  transform: scale(1);
-  transition: transform 150ms ease, color 200ms ease;
-}
-
-.icon:hover {
-  transform: scale(1.1);
-  color: var(--color-accent-2);
-}
-
-.icon:active {
-  transform: scale(0.95);
 }
 
 .hero-animation {

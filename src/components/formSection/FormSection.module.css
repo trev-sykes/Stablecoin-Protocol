@@ -72,3 +72,69 @@
     cursor: not-allowed;
     box-shadow: none;
 }
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.inputWithIcon {
+    width: 100%;
+    padding: var(--space-sm) var(--space-sm) var(--space-lg) 2.5rem;
+    /* Add left padding for icon and bottom for USD */
+    font-size: 1rem;
+    color: var(--color-neutral-700);
+    background-color: var(--input-background);
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.inputWithIcon:focus {
+    border-color: var(--color-accent-3);
+    background-color: var(--color-neutral-100);
+}
+
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-70%);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-size: 1rem;
+    color: var(--color-neutral-600);
+    pointer-events: none;
+}
+
+.iconText {
+    position: static;
+    font-size: 1rem;
+    color: var(--color-neutral-600);
+}
+
+
+.usdValue {
+    position: absolute;
+    bottom: 0.35rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-neutral-500);
+}
+
+/* For Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+    padding-left: 6.5rem;
+}

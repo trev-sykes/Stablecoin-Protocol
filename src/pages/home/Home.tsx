@@ -41,20 +41,18 @@ export const Home: React.FC = () => {
                             initial="hidden"
                             animate="visible"
                         >
-                            <motion.span variants={child}>Deposit & Borrow<br /></motion.span>
-                            <motion.span variants={child}>with your<br /></motion.span>
-                            <motion.span variants={child}>Bitcoin</motion.span>
+                            <motion.span variants={child}>Experience DeFi.<br /></motion.span>
+                            <motion.span variants={child}>Borrow with<br /></motion.span>
+                            <motion.span variants={child}>Bitcoin.</motion.span>
                         </motion.h1>
                         <motion.p
                             variants={slideInTopDelay}
                             initial="hidden"
                             animate="visible"
                         >
-                            <motion.span variants={child}>Use your wBTC as collateral to borrow BTCd,<br /></motion.span>
-                            <motion.span variants={child}>easily swap BTCd for USDC with ease.<br /></motion.span>
-                            <motion.span variants={child}><a
-                                className={styles.learnMore}
-                            >Learn about BTCd!</a></motion.span>
+                            <motion.span variants={child}>Practice DeFi borrowing and liquidation with BTC-backed assets.<br /></motion.span>
+                            <motion.span variants={child}>BTCd is your sandbox stablecoin to try real mechanics.<br /></motion.span>
+                            <motion.span variants={child}> No real assets. No risk. Pure simulation.</motion.span>
                         </motion.p>
                     </div>
                     <motion.div
@@ -78,7 +76,7 @@ export const Home: React.FC = () => {
                         whileInView="visible"
                         viewport={{ amount: 0.2, once: true }}
                     >
-                        Unlock Oppurtunities
+                        Explore Real DeFi Flows
                     </motion.h2>
                 </div>
                 <div
@@ -100,7 +98,8 @@ export const Home: React.FC = () => {
                             whileInView={"visible"}
                             viewport={{ once: true }}
                         >
-                            Store Bitcoin Securely. No Middlemen.
+                            Deposit wBTC,
+                            Test DeFi mechanics.
                         </motion.h3>
                         <motion.p
                             variants={slideInRightDelay}
@@ -109,12 +108,13 @@ export const Home: React.FC = () => {
                             viewport={{ once: true }}
                         >
 
-                            Deposit your Bitcoin into the protocol with full confidence.
-                            Your assets are held securely in audited smart contracts, with no intermediaries and complete transparency.
+                            Try depositing wBTC into a decentralized vault.
+                            Mint BTCd, experiment with leverage, and experience
+                            liquidation flows — all in a safe, sandbox environment.
                         </motion.p>
                         <motion.button
                             onClick={() => handleClick('collateral')}
-                        >Deposit
+                        >Try It Now
                         </motion.button>
                     </motion.div>
                 </div>
@@ -122,16 +122,17 @@ export const Home: React.FC = () => {
             <section className={`${styles.section} ${styles.liquidationSection}`}>
                 <div className={styles.liquidationLeft}>
                     <motion.h2>
-                        Take part in the action,<br />
-                        get paid to liquidate
+                        Master Liquidations.<br />
+                        Get Rewarded.
                     </motion.h2>
                     <motion.p>
-                        Mint Bitcoin Dollars and Liquidate bad positions for a bonus
+                        Practice monitoring vault health and liquidating overleveraged<br />
+                        positions for simulated bonuses. Real strategies, no real losses.
                     </motion.p>
                     <div className={styles.liquidationButtonContainer}>
                         <motion.button
                             onClick={() => handleClick('liquidation')}
-                        >View Liquidations
+                        >Find Liquidations
                         </motion.button>
                     </div>
                 </div>

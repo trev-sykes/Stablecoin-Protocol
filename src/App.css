@@ -14,11 +14,13 @@
   top: 0;
 }
 
+
 .dashboard {
   grid-column: 2;
   padding: 0;
   overflow-y: auto;
   background-color: var(--color-neutral-300);
+  overflow-x: hidden !important;
 }
 
 .errorContainer {
