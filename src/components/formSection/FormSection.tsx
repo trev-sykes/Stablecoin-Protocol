@@ -6,7 +6,6 @@ import MintConfirmationModal from "../confirmationModals/confirmMint/MintConfirm
 import BurnConfirmationModal from "../confirmationModals/confirmBurn/BurnConfirmationModal";
 import DepositConfirmationModal from "../confirmationModals/confrimDeposit/DepositConfirmationModal";
 import WithdrawConfirmationModal from "../confirmationModals/confirmWithdraw/WIthdrawConfirmationModal";
-import { formatter } from "../../utils/handleFormat";
 import wbtc from "../../../public/wbtc.png"
 import btcd from "../../../public/logo.png";
 
