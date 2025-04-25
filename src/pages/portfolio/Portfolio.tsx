@@ -13,11 +13,12 @@ import { User } from "../../components/user/User";
  * - Debt percentage
  */
 export const Portfolio: React.FC = () => {
-    const { userState, signerAddress } = useWeb3Store();
+    const { userState, signerAddress, transactionSigner } = useWeb3Store();
     return (
         <User
             userState={userState && userState}
             userAddress={signerAddress}
+            transactionSigner={transactionSigner}
         />
     );
 };
