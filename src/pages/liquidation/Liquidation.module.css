@@ -1,7 +1,8 @@
 /* Main container for the liquidation page */
 .container {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    min-height: 50vh;
 
     margin: 0 auto;
     display: flex;
@@ -116,4 +117,45 @@
 .userModalOverlay.active {
     display: block;
     /* Show the overlay when user is selected */
+}
+
+.heroContent {
+    display: flex;
+    height: 50%;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg);
+    margin: 0 auto;
+}
+
+.heroContentLeftContainer {
+    flex: 1;
+    padding-right: var(--space-lg);
+}
+
+.heroContentRightContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heroTitle {
+    font-family: var(--font-title);
+    font-size: var(--title-font-size);
+    font-weight: var(--title-font-weight);
+    margin-bottom: var(--space-md);
+    color: var(--color-neutral-900);
+}
+
+
+.heroDescription {
+    font-size: var(--text-font-size);
+    color: var(--color-neutral-700);
+    line-height: var(--line-height);
+    max-width: var(--subtitle-max-width);
+}
+
+.heroDescription span {
+    font-size: 1.25rem;
 }

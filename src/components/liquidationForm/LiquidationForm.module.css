@@ -3,93 +3,158 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 2rem 4rem;
     width: 100%;
+    font-family: var(--font-title);
     height: 100vh;
+}
 
+.heading {
+    font-size: var(--h2-font-size);
+    font-weight: var(--title-font-weight);
+    color: var(--color-neutral-900);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-xs);
+    display: inline-block;
 }
 
 .liquidationPopupContainer {
     position: relative;
-    height: 100%;
-    padding: 2rem;
+}
 
+.title {
+    font-size: var(--h3-font-size);
+    font-weight: var(--title-font-weight);
+    margin-bottom: var(--space-md);
+    color: var(--color-neutral-900);
+    padding-bottom: var(--space-xs);
+    display: inline-block;
 }
 
 .leftContainer {
-    margin-right: 4rem;
-    height: 100%;
+    margin-right: var(--space-xl);
+    padding: var(--space-lg);
+    min-width: 300px;
+    min-height: 500px;
 }
 
-.rightContainer {
-    flex: 1;
-    height: 100%;
+.list {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: var(--space-sm);
 }
 
-.barContainer {
-    position: relative;
-    height: 20px;
+.list::-webkit-scrollbar {
+    width: 6px;
 }
 
-.bar {
-    background-color: var(--color-neutral-100);
-    height: 100%;
+.list::-webkit-scrollbar-track {
+    background: var(--color-neutral-100);
     border-radius: 10px;
-    overflow: hidden;
-    position: relative;
 }
 
-.fill {
-    height: 100%;
-    transition: width 0.4s ease;
-    border-radius: 10px 0 0 10px;
+.list::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-400);
+    border-radius: 10px;
 }
 
-.marker {
-    position: absolute;
-    top: -4px;
-    width: 2px;
-    height: 28px;
-    background: var(--color-neutral-900);
-    transform: translateX(-50%);
-    z-index: 2;
+.list::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-700);
+}
+
+.item {
+    border-bottom: 1px solid var(--color-neutral-300);
+    padding: var(--space-xs) 0;
+    transition: all 0.2s ease;
+}
+
+.item:hover {
+    background-color: var(--color-neutral-200);
+    border-radius: var(--border-radius);
+    padding-left: var(--space-xs);
 }
 
 .itemText {
-    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    font-size: var(--subtitle-font-size);
     color: var(--color-neutral-800);
-    margin: 2.5rem 0;
     cursor: pointer;
     transform: scale(1);
     transition: all 150ms;
     user-select: none;
+    margin: var(--space-sm) 0;
+}
+
+.blockies {
+    margin-right: 10px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .itemText:hover {
-    transform: scale(1.01);
+    transform: translateX(5px);
+    color: var(--color-accent-1);
 }
 
 .itemText:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
 }
 
-.marker::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: -4px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #999;
-}
-
-.details strong {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-lg);
+.details {
+    background-color: var(--color-neutral-400);
+    padding: var(--space-md);
+    border-radius: var(--border-radius);
+    margin-top: var(--space-md);
 }
 
 .details p {
-    font-size: 1.5rem;
-    margin-bottom: var(--space-xl);
+    display: flex;
+    align-items: center;
+    font-size: var(--subtitle-font-size);
+    color: var(--color-neutral-700);
+    margin-bottom: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--border-radius);
+    background-color: var(--color-neutral-100);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s ease;
+}
+
+.details p:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.details strong {
+    font-weight: var(--title-font-weight);
+    color: var(--color-neutral-800);
+    margin-left: var(--space-xs);
+    margin-right: var(--space-xs);
+}
+
+/* Icons styling */
+.details svg {
+    color: var(--color-accent-1);
+    margin-right: var(--space-xs);
+}
+
+/* Add icon colors based on the event type */
+.details svg[data-lucide="droplet"] {
+    color: var(--color-accent-3);
+}
+
+.details svg[data-lucide="user"] {
+    color: var(--color-accent-2);
+}
+
+.details svg[data-lucide="check-circle"] {
+    color: var(--color-healthy);
+}
+
+.details svg[data-lucide="shield"] {
+    color: var(--color-warning);
+}
+
+.details svg[data-lucide="gift"] {
+    color: var(--color-accent-1);
 }

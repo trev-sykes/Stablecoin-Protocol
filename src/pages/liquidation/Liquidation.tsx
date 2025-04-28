@@ -6,7 +6,7 @@ import Blockies from "react-blockies";
 import useAlertStore from "../../store/useAlertStore";
 import { Eye, Droplet } from "lucide-react";
 import { LiquidationForm } from "../../components/liquidationForm/LiquidationForm";
-import { itemVariants } from "../../animationVariants/SlideVariants";
+import { child, itemVariants, slideInLeft, slideInTopDelay } from "../../animationVariants/SlideVariants";
 import { listVariants } from "../../animationVariants/listVariants";
 import { User } from "../../components/user/User";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,7 +16,7 @@ import { HorizontalNavigation } from "../../components/liquidationHorizontalNavi
 export const Liquidation: React.FC = () => {
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
     const [selectedUserState, setSelectedUserState] = useState<UserState | undefined>(undefined);
-    const [activeSection, setActiveSection] = useState('non-liquidatable');
+    const [activeSection, setActiveSection] = useState('');
     const { showAlert } = useAlertStore();
     const {
         loading,
@@ -107,6 +107,45 @@ export const Liquidation: React.FC = () => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
             >
+                {activeSection === '' && (
+                    <div className={styles.heroContent}>
+                        <div className={styles.heroContentLeftContainer}>
+                            <motion.h1
+                                variants={slideInLeft}
+                                initial="hidden"
+                                animate="visible"
+                                className={styles.heroTitle}
+                            >
+                                <motion.span variants={child}>Get Paid To</motion.span><br />
+                                <motion.span variants={child}>Liquidate</motion.span>
+                            </motion.h1>
+
+                            <motion.p
+                                variants={slideInTopDelay}
+                                initial="hidden"
+                                animate="visible"
+                                className={styles.heroDescription}
+                            >
+                                <motion.span variants={child}>Liquidate bad positions for a 10% bonus!</motion.span><br />
+                                <motion.span variants={child}>You can liquidate up to 50% of a user's position if their health factor falls below the min threshold.</motion.span><br />
+                                <motion.span variants={child}>Make sure to have sufficient collateral when you liquidate!</motion.span>
+                            </motion.p>
+
+                            <div className={styles.heroActions}>
+                                {/* Action Buttons or Additional Content */}
+                            </div>
+                        </div>
+
+                        {/* <motion.div
+                        className={styles.heroContentRightContainer}
+                        variants={slideInTop}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        <Droplet />
+                    </motion.div> */}
+                    </div>
+                )}
                 {selectedUser && selectedUserState && activeSection == 'user' && (
                     <div className={styles.userCardWrapper}>
                         <User
@@ -119,6 +158,7 @@ export const Liquidation: React.FC = () => {
 
 
                 <AnimatePresence mode="wait">
+
                     {!selectedUser && !selectedUserState && (
                         loading.fetchPastLiquidations ? (
                             <motion.div
@@ -140,6 +180,7 @@ export const Liquidation: React.FC = () => {
                                 animate="animate"
                                 exit="exit"
                             >
+
                                 {activeSection === 'liquidatable' && (
                                     <motion.div
                                         key="liquidatable-users"

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import Blockies from "react-blockies"
 import useWeb3Store from "../../store/useWeb3Store";
 import styles from "./LiquidationForm.module.css";
 import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle, Droplet, Gift, Shield, User } from "lucide-react";
 
 interface LiquidationPopupProps {
     isOpen: boolean;
@@ -24,26 +26,26 @@ const LiquidationPopup: React.FC<LiquidationPopupProps> = ({
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
             >
-                <h2 className={styles.title}>💥 Liquidation Event</h2>
 
                 <div className={styles.details}>
+                    <h1 className={styles.title}>Liquidation Event</h1>
                     <p>
-                        <strong>Liquidated User:</strong> {liquidationData.user}
+                        <Droplet /> <strong>user:</strong> {`0x...${liquidationData.user.slice(liquidationData.user.length - 5, liquidationData.user.length)}`}
                     </p>
 
                     <p>
-                        <strong>Liquidator:</strong> {liquidationData.liquidator}
+                        <User /> <strong>liquidator:</strong> {`0x...${liquidationData.liquidator.slice(liquidationData.liquidator.length - 5, liquidationData.liquidator.length)}`}
                     </p>
                     <p>
-                        <strong>Debt Repaid:</strong>{" "}
-                        {(parseFloat(liquidationData.debtRepaid) / 1e18).toFixed(2)} Bitcoin Dollars
+                        <CheckCircle /> <strong>debt repaid:</strong>{" "}
+                        {(parseFloat(liquidationData.debtRepaid) / 1e18).toFixed(2)} BTCd
                     </p>
                     <p>
-                        <strong>Collateral Seized:</strong>{" "}
+                        <Shield /> <strong>collateral seized:</strong>{" "}
                         {(parseFloat(liquidationData.collateralSeized) / 1e18).toFixed(4)} WBTC
                     </p>
                     <p>
-                        <strong>Bonus:</strong>{" "}
+                        <Gift /> <strong>bonus:</strong>{" "}
                         {(parseFloat(liquidationData.liquidationBonus) / 1e18).toFixed(2)} Bitcoin Dollars
                     </p>
                 </div>
@@ -82,7 +84,13 @@ export const LiquidationForm: React.FC = () => {
                                 }
                             >
                                 <p className={styles.itemText}>
-                                    {index + 1}  {liq.args[0]}
+                                    <span>
+                                        <Blockies
+                                            seed={liq.args[0]}
+                                            size={5}
+                                            className={styles.blockies}
+                                        />
+                                    </span> {`0x...${liq.args[0].slice(liq.args[0].length - 5, liq.args[0].length)}`}
                                 </p>
                             </div>
                         ))}
