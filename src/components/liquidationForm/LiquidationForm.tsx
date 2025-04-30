@@ -3,7 +3,6 @@ import Blockies from "react-blockies"
 import useWeb3Store from "../../store/useWeb3Store";
 import styles from "./LiquidationForm.module.css";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle, Droplet, Gift, Shield, User } from "lucide-react";
 
 interface LiquidationPopupProps {
     isOpen: boolean;
