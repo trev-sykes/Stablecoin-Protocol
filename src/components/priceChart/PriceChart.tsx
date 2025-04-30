@@ -17,6 +17,7 @@ import {
     Filler
 } from "chart.js";
 import { AnimatePresence, motion } from 'framer-motion';
+import useCoinGeckoStore from '../../store/useCoinGeckoStore';
 
 ChartJS.register(
     CategoryScale,
@@ -42,6 +43,10 @@ interface PriceChartProps {
     historicalData: PriceDataPoint[] | null;
     height?: number;
     customOptions?: any;
+    numberOfDays: string;
+    setNumberOfDays: React.Dispatch<React.SetStateAction<string>>;
+    lastNumberOfDays: string;
+    setLastNumberOfDays: any;
 }
 /**
  * Chart component for displaying historical price data
@@ -49,8 +54,13 @@ interface PriceChartProps {
 export const PriceChart: React.FC<PriceChartProps> = ({
     historicalData,
     height = 500,
-    customOptions = {}
+    customOptions = {},
+    numberOfDays,
+    setNumberOfDays,
+    lastNumberOfDays,
+    setLastNumberOfDays
 }) => {
+    const { fetchPrices } = useCoinGeckoStore();
     const defaultChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -116,6 +126,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({
 
     if (!chartData) return null;
 
+
     return (
         <AnimatePresence mode="wait">
             <motion.div
@@ -126,10 +137,33 @@ export const PriceChart: React.FC<PriceChartProps> = ({
                 transition={{ duration: 0.3 }}
             >
                 <div className={styles.chartHeader}>
+
                     <span className={styles.chartTitle}>
                         <span className={styles.offChain}>off-chain </span>
-                        Bitcoin Price
-                        <span className={styles.offChainDays}> (30 days)</span>
+                        Bitcoin Price {lastNumberOfDays && <span>{lastNumberOfDays} days</span>}
+                        <input
+                            onChange={(e) => setNumberOfDays(e.target.value)}
+                            value={numberOfDays}
+                            type='number'
+                            className={styles.offChainDays}
+
+                        />
+
+                        <span onClick={async () => {
+                            const days = Number(numberOfDays);
+                            if (isNaN(days) || days <= 0) {
+                                console.warn('Please enter a valid number of days');
+                                return;
+                            }
+                            try {
+                                await fetchPrices(days);
+                                setLastNumberOfDays(days);
+                            } catch (error) {
+                                console.error('Failed to fetch prices:', error);
+                            }
+                        }}>
+                            update
+                        </span>
                     </span>
                     <span className={styles.currentPrice}>
                         ${historicalData?.[historicalData.length - 1]?.price.toLocaleString().split('.')[0]}
@@ -141,6 +175,6 @@ export const PriceChart: React.FC<PriceChartProps> = ({
                     height={height}
                 />
             </motion.div>
-        </AnimatePresence>
+        </AnimatePresence >
     );
 };

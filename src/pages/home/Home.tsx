@@ -113,7 +113,7 @@ export const Home: React.FC = () => {
                             liquidation flows — all in a safe, sandbox environment.
                         </motion.p>
                         <motion.button
-                            onClick={() => handleClick('collateral')}
+                            onClick={() => handleClick('position')}
                         >Try It Now
                         </motion.button>
                     </motion.div>
@@ -167,26 +167,3 @@ export const Home: React.FC = () => {
         </div >
     );
 };
-
-
-{/* <motion.div
-                    className={styles.featuresList}
-                    variants={staggerContainer}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                >
-                    {homeCardInfo.map((feature, index) => (
-                        <motion.div
-                            key={index}
-                            className={styles.featureItem}
-                            variants={fadeInUp}
-                        >
-                            <div className={styles.featureIcon}>{feature.icon}</div>
-                            <div className={styles.featureContent}>
-                                <h3 className={styles.featureTitle}>{feature.title}</h3>
-                                <p className={styles.featureDescription}>{feature.description}</p>
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div> */}

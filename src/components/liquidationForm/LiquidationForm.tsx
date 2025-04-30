@@ -16,7 +16,6 @@ const LiquidationPopup: React.FC<LiquidationPopupProps> = ({
     liquidationData,
 }) => {
     if (!isOpen || !liquidationData) return null;
-
     return (
         <AnimatePresence mode="wait">
             <motion.div
@@ -27,28 +26,53 @@ const LiquidationPopup: React.FC<LiquidationPopupProps> = ({
                 transition={{ duration: 0.3 }}
             >
 
-                <div className={styles.details}>
-                    <h1 className={styles.title}>Liquidation Event</h1>
-                    <p>
-                        <Droplet /> <strong>user:</strong> {`0x...${liquidationData.user.slice(liquidationData.user.length - 5, liquidationData.user.length)}`}
-                    </p>
+                <div className={styles.receiptContainer}>
+                    <h2 className={styles.receiptTitle}>Liquidation Event Receipt</h2>
 
-                    <p>
-                        <User /> <strong>liquidator:</strong> {`0x...${liquidationData.liquidator.slice(liquidationData.liquidator.length - 5, liquidationData.liquidator.length)}`}
-                    </p>
-                    <p>
-                        <CheckCircle /> <strong>debt repaid:</strong>{" "}
-                        {(parseFloat(liquidationData.debtRepaid) / 1e18).toFixed(2)} BTCd
-                    </p>
-                    <p>
-                        <Shield /> <strong>collateral seized:</strong>{" "}
-                        {(parseFloat(liquidationData.collateralSeized) / 1e18).toFixed(4)} WBTC
-                    </p>
-                    <p>
-                        <Gift /> <strong>bonus:</strong>{" "}
-                        {(parseFloat(liquidationData.liquidationBonus) / 1e18).toFixed(2)} Bitcoin Dollars
-                    </p>
+                    <div className={styles.receiptSection}>
+                    </div>
+
+                    <div className={styles.receiptSection}>
+                        <div className={styles.receiptRow}>
+                            <span className={styles.receiptLabel}>User Address:</span>
+                            <span className={styles.receiptValue}>
+                                {`0x...${liquidationData.user.slice(-5)}`}
+                            </span>
+                        </div>
+                        <div className={styles.receiptRow}>
+                            <span className={styles.receiptLabel}>Liquidator Address:</span>
+                            <span className={styles.receiptValue}>
+                                {`0x...${liquidationData.liquidator.slice(-5)}`}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className={styles.receiptSection}>
+                        <div className={styles.receiptRow}>
+                            <span className={styles.receiptLabel}>Debt Repaid:</span>
+                            <span className={styles.receiptValue}>
+                                {(parseFloat(liquidationData.debtRepaid) / 1e18).toFixed(2)} BTCd
+                            </span>
+                        </div>
+                        <div className={styles.receiptRow}>
+                            <span className={styles.receiptLabel}>Collateral Seized:</span>
+                            <span className={styles.receiptValue}>
+                                {(parseFloat(liquidationData.collateralSeized) / 1e18).toFixed(4)} WBTC
+                            </span>
+                        </div>
+                        <div className={styles.receiptRow}>
+                            <span className={styles.receiptLabel}>Bonus:</span>
+                            <span className={styles.receiptValue}>
+                                {(parseFloat(liquidationData.liquidationBonus) / 1e18).toFixed(2)} Bitcoin Dollars
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className={styles.receiptFooter}>
+                        <p className={styles.footerNote}>Thank you{` 0x..${liquidationData && liquidationData.liquidator.slice(liquidationData.liquidator.length - 3, liquidationData.liquidator.length)}`} for keeping the protocol safe!</p>
+                    </div>
                 </div>
+
             </motion.div >
         </AnimatePresence>
     );

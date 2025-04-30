@@ -158,3 +158,59 @@
 .details svg[data-lucide="gift"] {
     color: var(--color-accent-1);
 }
+
+.receiptContainer {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: var(--space-lg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.receiptTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: var(--space-md);
+    color: var(--color-neutral-800);
+}
+
+.receiptSection {
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-neutral-300);
+}
+
+.receiptRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: var(--color-neutral-700);
+    padding: var(--space-xs) 0;
+}
+
+.receiptLabel {
+    font-weight: 600;
+    color: var(--color-neutral-900);
+}
+
+.receiptValue {
+    font-weight: normal;
+    color: var(--color-neutral-700);
+    text-align: right;
+    word-wrap: break-word;
+}
+
+.receiptFooter {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: var(--space-lg);
+    color: var(--color-neutral-600);
+}
+
+.footerNote {
+    font-style: italic;
+    margin-top: var(--space-xs);
+}

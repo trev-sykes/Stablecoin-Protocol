@@ -16,7 +16,7 @@ interface CoinGeckoState {
     prices: PriceDataPoint[] | null;
     isLoading: boolean;
     /** Fetches historical Bitcoin price data */
-    fetchPrices: () => Promise<void>;
+    fetchPrices: (numDays?: number) => Promise<void>;
 }
 
 /**
@@ -25,10 +25,13 @@ interface CoinGeckoState {
 const useCoinGeckoStore = create<CoinGeckoState>((set) => ({
     prices: null,
     isLoading: false,
-    fetchPrices: async () => {
+    fetchPrices: async (numDays) => {
         set({ isLoading: true });
+        if (numDays && numDays < 1 || numDays && numDays > 365) {
+            return;
+        }
         try {
-            const prices = await fetchBitcoinHistoricalData(30);
+            const prices = await fetchBitcoinHistoricalData(numDays ? numDays : 30);
             set({ prices });
         } catch (error) {
             console.error("Failed to fetch prices", error);

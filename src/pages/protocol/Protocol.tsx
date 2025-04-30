@@ -6,6 +6,7 @@ import { PriceChart } from "../../components/priceChart/PriceChart";
 import { Flame, Bitcoin, Cross, DollarSign } from "lucide-react";
 import { Card } from "../../components/card/Card";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 /**
  * Protocol Component
  *
@@ -17,6 +18,9 @@ import { AnimatePresence, motion } from "framer-motion";
 export const Protocol: React.FC = () => {
     const { contractState, users } = useWeb3Store();
     const { isLoading, prices } = useCoinGeckoStore();
+    const [numberOfDays, setNumberOfDays] = useState('30');
+    const [lastNumberOfDays, setLastNumberOfDays] = useState('30');
+
     /**
      * Effect to fetch BTC price history data from CoinGecko.
      * It will fetch the price data if the `prices` are not already available.
@@ -38,6 +42,10 @@ export const Protocol: React.FC = () => {
                                 historicalData={prices}
                                 height={300}
                                 customOptions={prices}
+                                numberOfDays={numberOfDays}
+                                setNumberOfDays={setNumberOfDays}
+                                lastNumberOfDays={lastNumberOfDays}
+                                setLastNumberOfDays={setLastNumberOfDays}
                             />
                         )}
                     </div>
