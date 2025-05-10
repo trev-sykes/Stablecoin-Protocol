@@ -110,14 +110,10 @@ html {
   overflow-x: hidden !important;
 }
 
-body {
-  background: black;
-}
+body {}
 
 
-.dashboard {
-  background: black;
-}
+.dashboard {}
 
 .title {
   font-size: var(--title-font-size);

@@ -9,7 +9,7 @@ import { Protocol } from './pages/protocol/Protocol';
 import { Liquidation } from './pages/liquidation/Liquidation';
 import { useWindowWidth } from './hooks/useWindowWidth';
 import { Alert } from './components/alert/Alert';
-import { CircleLoader } from 'react-spinners';
+import { CircleLoader, PacmanLoader } from 'react-spinners';
 import TestnetNotice from './components/testnetNotice/TestnetNotice';
 import useWeb3Store from './store/useWeb3Store';
 import { useProtocol } from './hooks/useProtocol';
@@ -138,6 +138,7 @@ function App() {
       ) : (
         <div className='errorContainer'>
           <h1>This site is Desktop only</h1>
+          <PacmanLoader />
         </div>
       )}
     </Router>

@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from "../../../public/logo.png"
+import logo from "/logo.png"
 
 /**
  * Type for defining the width property (either string or number).
